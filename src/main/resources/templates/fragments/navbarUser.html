@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div th:fragment="navbar">
+        <nav class="navbar" id="navbar">
+            <div class="menu-icon" onclick="toggleMenu()">
+              &#9776;
+            </div>
+          
+            <img src="/img/TesLogo.webp" alt="TesMoney" class="navbar-logo" />
+          
+            <ul>
+              <li><a href="#" onclick="handleClientPage()">Billeteras</a></li>
+              <li class="dropdown">
+                <img
+                  src="/img/User_icon.webp"
+                  alt="Usuario"
+                  class="user-icon"
+                  onclick="toggleDropdown()"
+                />
+                <div id="dropdown-menu" class="dropdown-menu" style="display: none;">
+                  <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="logout-btn">Cerrar sesión</button>
+                  </form>
+                </div>
+              </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        function toggleMenu() {
+          document.getElementById("navbar").classList.toggle("active");
+        }
+      
+        function toggleDropdown() {
+          const dropdown = document.getElementById("dropdown-menu");
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+      
+        function handleClientPage() {
+          window.location.href = "/cliente/billeteras";
+        }
+    </script>
+
+  </body>
+</html>

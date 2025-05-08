@@ -7,6 +7,10 @@
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/Login.css}">
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
 <body>
 
@@ -23,7 +27,7 @@
         <p th:if="${error}" class="error-message" th:text="${error}"></p>
 
         <!-- Login Form -->
-        <form th:action="@{/login}" method="post">
+        <form id="login-form">
           <label>
             <p>Usuario:</p>
             <input type="text" name="usuario" class="input-field" required/>
@@ -46,6 +50,70 @@
 
   <!-- Fragmento Footer  -->
   <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Toastify JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+  document.getElementById("login-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const usuario = document.querySelector('input[name="usuario"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    try {
+      const response = await fetch("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: usuario,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Si hay error, puede ser texto simple (no JSON), entonces lo capturamos así:
+        const errorMsg = typeof data === 'string' ? data : data.message;
+        Toastify({
+          text: errorMsg || "Error al iniciar sesión",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#ff4d4f"
+        }).showToast();
+      } else {
+        Toastify({
+          text: data.message || "Inicio de sesión exitoso",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#28a745"
+        }).showToast();
+
+        // Guardar token (opcional)
+        localStorage.setItem("token", data.token);
+
+        // Redirigir después de 1 segundo
+        setTimeout(() => {
+          window.location.href = "/user";
+        }, 1000);
+      }
+    } catch (error) {
+      Toastify({
+        text: "Error de conexión con el servidor",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#ff4d4f"
+      }).showToast();
+    }
+  });
+</script>
+
 
 </body>
 </html>
