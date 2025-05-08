@@ -6,6 +6,7 @@
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/TopSection.css}">
   <script>
     function toggleMenu() {
       const navbar = document.getElementById("navbar");
@@ -15,14 +16,26 @@
 </head>
 <body>
 
-  <!-- Incluir el fragmento de la barra de navegación -->
+  <!-- Fragmento Navbar -->
   <div th:replace="fragments/navbar :: navbar"></div>
 
+  <!-- Seccion informativa  -->
   <main style="padding: 20px;">
-    <h1>Bienvenido a la página de inicio</h1>
+    <section>
+      <div class="text_container">
+        <h2>Bienvenido al Sistema de Matrícula UTS</h2>
+        <p>
+           Gestiona fácilmente tu matrícula académica en las Unidades Tecnológicas de Santander.
+           Consulta asignaturas disponibles, registra tus materias y lleva el control de tu historial académico de manera eficiente.
+        </p>
+      </div>
+      <figure class="img_container">
+        <img th:src="@{/img/TopSection.webp}" alt="Hero"/>
+      </figure>
+    </section>
   </main>
 
-  <!-- Fragmento de Footer  -->
+  <!-- Fragmento Footer  -->
   <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
