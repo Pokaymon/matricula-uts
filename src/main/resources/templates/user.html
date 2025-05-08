@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Page | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <section>
+    <main>
+      <h1>Bienvenido Admin</h1>
+    </main>
+  </section>
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
