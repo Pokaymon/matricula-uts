@@ -1,0 +1,32 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-top: auto;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 10px;
+    background-color: #000000;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+
+@media (max-width: 1400px) {
+    .footer p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .footer p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 760px) {
+    .footer p {
+        font-size: 10px;
+    }
+}

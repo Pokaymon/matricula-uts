@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <script>
+    function toggleMenu() {
+      const navbar = document.getElementById("navbar");
+      navbar.classList.toggle("active");
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Incluir el fragmento de la barra de navegación -->
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <main style="padding: 20px;">
+    <h1>Bienvenido a la página de inicio</h1>
+  </main>
+
+  <!-- Fragmento de Footer  -->
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
