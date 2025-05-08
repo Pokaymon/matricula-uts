@@ -42,6 +42,9 @@
     background-color: rgb(18, 77, 76);
     color: #FFFFFF;
   }
+  .navbar li:nth-last-child(1) a:hover {
+    background-color: rgb(28, 115, 115);
+  }
   .navbar a:hover {
     background-color: rgb(18, 77, 76);
     color: white;

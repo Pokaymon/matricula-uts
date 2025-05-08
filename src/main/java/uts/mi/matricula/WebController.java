@@ -11,4 +11,9 @@ public class WebController {
     return "home";
   }
 
+  @GetMapping("/login")
+  public String login(){
+    return "login";
+  }
+
 }

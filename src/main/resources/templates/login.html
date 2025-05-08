@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Log In | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/Login.css}">
+</head>
+<body>
+
+  <!-- Fragmento Navbar -->
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <!-- Formulario Login  -->
+  </main>
+    <section class="login-container">
+      <div class="login-box">
+        <h2>Log In</h2>
+
+        <!-- Error message (if exists) -->
+        <p th:if="${error}" class="error-message" th:text="${error}"></p>
+
+        <!-- Login Form -->
+        <form th:action="@{/login}" method="post">
+          <label>
+            <p>Usuario:</p>
+            <input type="text" name="usuario" class="input-field" required/>
+          </label>
+
+          <label>
+            <p>Contraseña:</p>
+            <input type="password" name="password" class="input-field" required/>
+          </label>
+
+          <div class="button_container">
+            <button type="submit" class="submit-button">
+              Iniciar sesión
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fragmento Footer  -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
