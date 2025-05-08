@@ -39,11 +39,11 @@
     transition: background-color 0.3s ease, padding 0.3s ease;
   }
   .navbar li:nth-last-child(1) a {
-    background-color: #000000;
+    background-color: rgb(18, 77, 76);
     color: #FFFFFF;
   }
   .navbar a:hover {
-    background-color: #000000;
+    background-color: rgb(18, 77, 76);
     color: white;
     padding: 8px 20px;
   }
