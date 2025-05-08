@@ -6,6 +6,7 @@
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/user.css}">
 
 <script>
   const token = localStorage.getItem("token");
@@ -21,8 +22,23 @@
   <div th:replace="fragments/navbar_user :: navbar"></div>
 
   <section>
-    <main>
+    <main class="container">
+      <h1 class="welcome-title">Bienvenido a Matrícula UTS</h1>
 
+      <table id="user-table">
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+  	    <th>Rol</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+
+        </tbody>
+      </table>
     </main>
   </section>
 
@@ -31,6 +47,33 @@
 
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/users", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.getElementById("userTableBody");
+      data.forEach(user => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.cedula}</td>
+          <td>${user.username}</td>
+          <td>${user.nombre}</td>
+          <td>${user.apellido}</td>
+          <td>${user.rol}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(error => console.error("Error al cargar usuarios:", error));
+  });
+</script>
 
 </body>
 </html>
