@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div th:fragment="navbar">
+      <nav class="navbar" id="navbar">
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+
+        <img src="/img/UTSMatricula.webp" alt="UTSMatricula" class="navbar-logo" />
+        <ul>
+          <li><a th:href="@{/}">Cerrar Sesion</a></li>
+        </ul>
+      </nav>
+    </div>
+  </body>
+</html>

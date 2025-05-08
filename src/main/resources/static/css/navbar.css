@@ -3,6 +3,7 @@
 .navbar {
     background-color: #FFFFFF;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 1rem;
     width: 100%;
@@ -23,7 +24,8 @@
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: space-around;
+    gap: 30px;
+    justify-content: flex-end;
     flex-grow: 1;
   }
   .navbar li {
