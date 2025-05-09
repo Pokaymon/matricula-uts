@@ -52,7 +52,9 @@
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>
 
+<!-- GET -->
 <script>
+  // GET Para mostrar datos en la tabla
   document.addEventListener("DOMContentLoaded", () => {
     fetch("/api/users", {
       headers: {
@@ -78,6 +80,89 @@
     .catch(error => console.error("Error al cargar usuarios:", error));
   });
 </script>
+
+<!-- POST -->
+<script>
+  const modal = document.getElementById("userModal");
+  const openBtn = document.querySelector(".create_users_button");
+  const closeBtn = document.querySelector(".close-button");
+
+  function limpiarFormulario() {
+    document.getElementById("createUserForm").reset();
+  }
+
+  openBtn.addEventListener("click", () => {
+    modal.style.display = "block";
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    limpiarFormulario();
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target == modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  // Enviar formulario
+  document.getElementById("createUserForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const userData = {
+      cedula: document.getElementById("cedula").value,
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value,
+      nombre: document.getElementById("nombre").value,
+      apellido: document.getElementById("apellido").value,
+      rol: document.getElementById("rol").value
+    };
+
+    fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify(userData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Error al crear usuario");
+      return response.json();
+    })
+    .then(data => {
+      alert("Usuario creado con éxito");
+      modal.style.display = "none";
+      limpiarFormulario();
+      location.reload();
+    })
+    .catch(error => alert(error.message));
+  });
+</script>
+
+<!-- Modal para Crear Usuario -->
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>Crear Nuevo Usuario</h2>
+    <form id="createUserForm">
+      <input type="text" id="cedula" placeholder="Cédula" required />
+      <input type="text" id="username" placeholder="Usuario" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <input type="text" id="nombre" placeholder="Nombre" required />
+      <input type="text" id="apellido" placeholder="Apellido" required />
+      <select id="rol" required>
+        <option value="">Seleccionar Rol</option>
+        <option value="ADMIN">ADMIN</option>
+        <option value="COORDINADOR">COORDINADOR</option>
+        <option value="PROFESOR">PROFESOR</option>
+        <option value="ESTUDIANTE">ESTUDIANTE</option>
+        <option value="AUDITOR">AUDITOR</option>
+      </select>
+      <button type="submit" class="submit-button">Guardar Usuario</button>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>
