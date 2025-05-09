@@ -17,6 +17,23 @@ body {
   margin-bottom: 2rem;
   font-weight: bold;
 }
+.create_users_container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.create_users_button {
+  all: unset;
+  background-color: rgb(18, 77, 76);
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.create_users_button:hover {
+  background-color: #006d5b;
+}
 #user-table {
   width: 100%;
   border-collapse: collapse;
