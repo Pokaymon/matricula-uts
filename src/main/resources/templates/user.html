@@ -174,6 +174,87 @@
   });
 </script>
 
+<!-- PUT -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("userModal");
+    const form = document.getElementById("createUserForm");
+    const modalTitle = document.getElementById("modalTittle");
+    const submitButton = form.querySelector(".submit-button");
+
+    let isEditing = false;
+
+    // Escuchar clicks en los botones de editar
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("edit-btn")) {
+        isEditing = true;
+        modal.style.display = "block";
+        modalTitle.textContent = "Editar Usuario";
+        submitButton.textContent = "Actualizar Usuario";
+
+        // Rellenar formulario con datos del usuario seleccionado
+        document.getElementById("userId").value = e.target.getAttribute("data-id");
+        document.getElementById("cedula").value = e.target.getAttribute("data-cedula");
+        document.getElementById("username").value = e.target.getAttribute("data-username");
+        document.getElementById("nombre").value = e.target.getAttribute("data-nombre");
+        document.getElementById("apellido").value = e.target.getAttribute("data-apellido");
+        document.getElementById("rol").value = e.target.getAttribute("data-rol");
+
+        // Ocultar campo de contraseña en edición
+        document.getElementById("password").style.display = "none";
+      }
+    });
+
+    // Sobrescribir comportamiento del formulario para PUT o POST
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const userId = document.getElementById("userId").value;
+      const userData = {
+        cedula: document.getElementById("cedula").value,
+        username: document.getElementById("username").value,
+        nombre: document.getElementById("nombre").value,
+        apellido: document.getElementById("apellido").value,
+        rol: document.getElementById("rol").value
+      };
+
+      // Solo incluir contraseña si se está creando un nuevo usuario
+      if (!isEditing) {
+        userData.password = document.getElementById("password").value;
+      }
+
+      const method = isEditing ? "PUT" : "POST";
+      const url = isEditing ? `/api/users/${userId}` : "/api/users";
+
+      fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error(`Error al ${isEditing ? "actualizar" : "crear"} usuario`);
+        return response.json();
+      })
+      .then(data => {
+        alert(`Usuario ${isEditing ? "actualizado" : "creado"} con éxito`);
+        modal.style.display = "none";
+        form.reset();
+        location.reload();
+      })
+      .catch(error => alert(error.message))
+      .finally(() => {
+        isEditing = false;
+        document.getElementById("password").style.display = "block";
+        submitButton.textContent = "Guardar Usuario";
+        modalTitle.textContent = "Crear Nuevo Usuario";
+      });
+    });
+  });
+</script>
+
 <!-- Modal para Crear Usuario -->
 <div id="userModal" class="modal">
   <div class="modal-content">
