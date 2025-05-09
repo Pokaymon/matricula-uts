@@ -31,6 +31,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        String method = request.getMethod();
+
+        // Si el método no es GET, validar rol ADMIN
+        if (!method.equalsIgnoreCase("GET")) {
+            String role = JwtUtil.getRoleFromToken(token);
+            if (!"ADMIN".equalsIgnoreCase(role)) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para esta operacion");
+                return;
+            }
+        }
+
         // Continúa la cadena del filtro si el token es válido
         filterChain.doFilter(request, response);
     }

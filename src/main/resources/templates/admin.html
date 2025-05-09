@@ -10,8 +10,45 @@
 
 <script>
   const token = localStorage.getItem("token");
+
   if (!token) {
     window.location.href = "/login";
+  } else {
+    fetch("/api/users", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(users => {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const username = payload.sub; // o donde guardes el username
+
+      const user = users.find(u => u.username === username);
+
+      if (!user) {
+        alert("Usuario no encontrado");
+        window.location.href = "/login";
+        return;
+      }
+
+      const expectedRole = "ADMIN"; // Cambiar segun vista
+
+      if (user.rol !== expectedRole) {
+        // Redirige a la vista correcta
+        if (user.rol === "ADMIN") window.location.href = "/admin";
+        else if (user.rol === "ESTUDIANTE") window.location.href = "/student";
+        else if (user.rol === "PROFESOR") window.location.href = "/teacher";
+        else if (user.rol === "COORDINADOR") window.location.href = "/coordinator";
+        else if (user.rol === "AUDITOR") window.location.href = "/audit";
+        else window.location.href = "/login";
+      }
+    })
+    .catch(err => {
+      console.error("Error al obtener usuario:", err);
+      window.location.href = "/login";
+    });
   }
 </script>
 

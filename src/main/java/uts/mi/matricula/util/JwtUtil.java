@@ -31,6 +31,13 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    public static String getRoleFromToken(String token) {
+        return Jwts.parser().verifyWith(key).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
+    }
+
     public static boolean isTokenValid(String token) {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
