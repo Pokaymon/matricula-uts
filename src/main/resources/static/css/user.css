@@ -130,3 +130,18 @@ body {
 .delete-btn:hover {
   background-color: #c0392b;
 }
+/* Editar */
+.edit-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+.edit-btn:hover {
+  background-color: #2980b9;
+}
+
