@@ -78,7 +78,8 @@
  	    <button class="edit-btn"
 	      data-id="${user.id}"
 	      data-cedula="${user.cedula}" 
-    	      data-username="${user.username}" 
+    	      data-username="${user.username}"
+	      data-password="${user.password}" 
               data-nombre="${user.nombre}" 
               data-apellido="${user.apellido}" 
               data-rol="${user.rol}">Editar</button>
@@ -164,12 +165,13 @@
         document.getElementById("userId").value = e.target.getAttribute("data-id");
         document.getElementById("cedula").value = e.target.getAttribute("data-cedula");
         document.getElementById("username").value = e.target.getAttribute("data-username");
+	document.getElementById("password").value = e.target.getAttribute("data-password")
         document.getElementById("nombre").value = e.target.getAttribute("data-nombre");
         document.getElementById("apellido").value = e.target.getAttribute("data-apellido");
         document.getElementById("rol").value = e.target.getAttribute("data-rol");
 
         // Ocultar contraseña en modo edición
-        passwordField.style.display = "none";
+        passwordField.style.display = "block";
       }
     });
 
@@ -185,7 +187,7 @@
         rol: document.getElementById("rol").value
       };
 
-      if (!isEditing) {
+      if (passwordField.value.trim() !== "") {
         userData.password = passwordField.value;
       }
 
