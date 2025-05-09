@@ -97,10 +97,49 @@
         // Guardar token (opcional)
         localStorage.setItem("token", data.token);
 
-        // Redirigir después de 1 segundo
-        setTimeout(() => {
-          window.location.href = "/admin";
-        }, 1000);
+        // Ahora obtener el detalle del usuario para verificar su rol
+        const userResponse = await fetch("/api/users", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${data.token}`
+          }
+        });
+
+        if (!userResponse.ok) {
+          Toastify({
+            text: "Error al obtener los datos del usuario",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#ff4d4f"
+          }).showToast();
+        } else {
+          const userData = await userResponse.json();
+
+          // Verificamos el rol del usuario y redirigimos
+          if (userData.rol === "ADMIN") {
+            setTimeout(() => {
+              window.location.href = "/admin";
+            }, 1000);
+          } else if (userData.rol === "ESTUDIANTE") {
+            setTimeout(() => {
+              window.location.href = "/student";
+            }, 1000);
+          } else if (userData.rol === "COORDINADOR") {
+            setTimeout(() => {
+              window.location.href = "/student";
+            }, 1000);
+          }
+            else {
+            Toastify({
+              text: "Rol de usuario no reconocido",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+              backgroundColor: "#ff4d4f"
+            }).showToast();
+          }
+        }
       }
     } catch (error) {
       Toastify({
@@ -113,7 +152,6 @@
     }
   });
 </script>
-
 
 </body>
 </html>
