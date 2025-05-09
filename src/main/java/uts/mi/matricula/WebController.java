@@ -16,8 +16,13 @@ public class WebController {
     return "login";
   }
 
-  @GetMapping("/user")
-  public String user(){
-    return "user";
+  @GetMapping("/admin")
+  public String admin(){
+    return "admin";
+  }
+
+  @GetMapping("/student")
+  public String student(){
+    return "student";
   }
 }
