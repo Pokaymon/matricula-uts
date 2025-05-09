@@ -8,6 +8,8 @@ import uts.mi.matricula.dto.LoginResponse;
 import uts.mi.matricula.model.User;
 import uts.mi.matricula.repository.UserRepository;
 import uts.mi.matricula.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
 
@@ -19,7 +21,7 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Optional<User> userOpt = userRepository.findByUsername(loginRequest.getUsername());
 
         if (userOpt.isEmpty()) {
@@ -33,6 +35,14 @@ public class AuthController {
         }
 
         String token = JwtUtil.generateToken(user.getUsername(), user.getRol());
+
+        // Guardar el token en una cookie
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(false); // Si solo es para JavaScript, puedes dejarlo en false
+        cookie.setPath("/");       // Disponible en toda la app
+        cookie.setMaxAge(60 * 60); // 1 hora
+        response.addCookie(cookie);
+
         return ResponseEntity.ok(new LoginResponse(token, "Login exitoso"));
     }
 }

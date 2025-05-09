@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>403 - Acceso Denegado | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/unauthorized.css}">
+</head>
+<body>
+
+  <div class="container_unauthorized">
+    <h1 class="error-code">403</h1>
+    <h2 class="unauthorized-title">Acceso Denegado</h2>
+    <p class="unauthorized-message">No tienes permisos para acceder a esta sección del sistema.</p>
+    <button class="back-button" onclick="history.back()">Volver</button>
+  </div>
+
+</body>
+</html>
