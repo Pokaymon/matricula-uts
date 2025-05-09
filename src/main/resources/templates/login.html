@@ -114,20 +114,43 @@
             backgroundColor: "#ff4d4f"
           }).showToast();
         } else {
-          const userData = await userResponse.json();
+
+          const userDataList = await userResponse.json();
+
+          // Buscar usuario que acaba de iniciar sesión
+          const user = userDataList.find(u => u.username === usuario);
+
+ 	  if (!user) {
+            Toastify({
+              text: "Usuario no encontrado en la lista",
+	      duration: 3000,
+   	      gravity: "top",
+              position: "right",
+              backgroundColor: "ff4d4f"
+            }).showToast();
+	    return;
+          }
 
           // Verificamos el rol del usuario y redirigimos
-          if (userData.rol === "ADMIN") {
+          if (user.rol === "ADMIN") {
             setTimeout(() => {
               window.location.href = "/admin";
             }, 1000);
-          } else if (userData.rol === "ESTUDIANTE") {
+          } else if (user.rol === "ESTUDIANTE") {
             setTimeout(() => {
               window.location.href = "/student";
             }, 1000);
-          } else if (userData.rol === "COORDINADOR") {
+          } else if (user.rol === "COORDINADOR") {
             setTimeout(() => {
-              window.location.href = "/student";
+              window.location.href = "/coordinator";
+            }, 1000);
+          } else if (user.rol === "PROFESOR") {
+            setTimeout(() => {
+              window.location.href = "/teacher";
+            }, 1000);
+          } else if (user.rol === "AUDITOR") {
+            setTimeout(() => {
+              window.location.href = "/audit";
             }, 1000);
           }
             else {
