@@ -113,18 +113,30 @@
   });
 </script>
 
-<!-- POST -->
+<!-- POST + PUT -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("userModal");
+    const form = document.getElementById("createUserForm");
+    const modalTitle = document.getElementById("modalTittle");
+    const submitButton = form.querySelector(".submit-button");
     const openBtn = document.querySelector(".create_users_button");
     const closeBtn = document.querySelector(".close-button");
+    const passwordField = document.getElementById("password");
+
+    let isEditing = false;
 
     function limpiarFormulario() {
-      document.getElementById("createUserForm").reset();
+      form.reset();
+      document.getElementById("userId").value = "";
+      isEditing = false;
+      modalTitle.textContent = "Crear Nuevo Usuario";
+      submitButton.textContent = "Guardar Usuario";
+      passwordField.style.display = "block";
     }
 
     openBtn.addEventListener("click", () => {
+      limpiarFormulario();  // Resetea y asegura que no esté en edición
       modal.style.display = "block";
     });
 
@@ -134,55 +146,11 @@
     });
 
     window.addEventListener("click", (e) => {
-      if (e.target == modal) {
+      if (e.target === modal) {
         modal.style.display = "none";
         limpiarFormulario();
       }
     });
-
-    document.getElementById("createUserForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const userData = {
-        cedula: document.getElementById("cedula").value,
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value,
-        nombre: document.getElementById("nombre").value,
-        apellido: document.getElementById("apellido").value,
-        rol: document.getElementById("rol").value
-      };
-
-      fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token")
-        },
-        body: JSON.stringify(userData)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Error al crear usuario");
-        return response.json();
-      })
-      .then(data => {
-        alert("Usuario creado con éxito");
-        modal.style.display = "none";
-        limpiarFormulario();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
-    });
-  });
-</script>
-
-<!-- PUT -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("userModal");
-    const form = document.getElementById("createUserForm");
-    const modalTitle = document.getElementById("modalTittle");
-    const submitButton = form.querySelector(".submit-button");
-
-    let isEditing = false;
 
     // Escuchar clicks en los botones de editar
     document.addEventListener("click", (e) => {
@@ -192,7 +160,7 @@
         modalTitle.textContent = "Editar Usuario";
         submitButton.textContent = "Actualizar Usuario";
 
-        // Rellenar formulario con datos del usuario seleccionado
+        // Rellenar datos
         document.getElementById("userId").value = e.target.getAttribute("data-id");
         document.getElementById("cedula").value = e.target.getAttribute("data-cedula");
         document.getElementById("username").value = e.target.getAttribute("data-username");
@@ -200,12 +168,11 @@
         document.getElementById("apellido").value = e.target.getAttribute("data-apellido");
         document.getElementById("rol").value = e.target.getAttribute("data-rol");
 
-        // Ocultar campo de contraseña en edición
-        document.getElementById("password").style.display = "none";
+        // Ocultar contraseña en modo edición
+        passwordField.style.display = "none";
       }
     });
 
-    // Sobrescribir comportamiento del formulario para PUT o POST
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -218,9 +185,8 @@
         rol: document.getElementById("rol").value
       };
 
-      // Solo incluir contraseña si se está creando un nuevo usuario
       if (!isEditing) {
-        userData.password = document.getElementById("password").value;
+        userData.password = passwordField.value;
       }
 
       const method = isEditing ? "PUT" : "POST";
@@ -241,16 +207,10 @@
       .then(data => {
         alert(`Usuario ${isEditing ? "actualizado" : "creado"} con éxito`);
         modal.style.display = "none";
-        form.reset();
+        limpiarFormulario();
         location.reload();
       })
-      .catch(error => alert(error.message))
-      .finally(() => {
-        isEditing = false;
-        document.getElementById("password").style.display = "block";
-        submitButton.textContent = "Guardar Usuario";
-        modalTitle.textContent = "Crear Nuevo Usuario";
-      });
+      .catch(error => alert(error.message));
     });
   });
 </script>
