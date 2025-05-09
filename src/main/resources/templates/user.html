@@ -37,6 +37,7 @@
             <th>Nombre</th>
             <th>Apellido</th>
   	    <th>Rol</th>
+ 	    <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="userTableBody">
@@ -73,11 +74,36 @@
           <td>${user.nombre}</td>
           <td>${user.apellido}</td>
           <td>${user.rol}</td>
+	  <td>
+	    <button class="delete-btn" data-id="${user.id}">Borrar</button>
+	  </td>
         `;
         tbody.appendChild(row);
       });
     })
     .catch(error => console.error("Error al cargar usuarios:", error));
+
+    // DELETE
+    tbody.querySelectorAll(".delete-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        const userId = button.getAttribute("data-id");
+        const confirmDelete = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+        if (confirmDelete) {
+          fetch(`/api/users/${userId}`, {
+            method: "DELETE",
+            headers: {
+              "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+          })
+          .then(response => {
+            if (!response.ok) throw new Error("Error al eliminar usuario");
+            alert("Usuario eliminado con éxito");
+            location.reload(); // Actualiza la tabla
+          })
+          .catch(error => alert(error.message));
+        }
+      });
+    });
   });
 </script>
 
