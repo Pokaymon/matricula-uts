@@ -15,8 +15,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Map<String, Predicate<String>> accessRules = Map.of(
         "/api/users", role -> role.equalsIgnoreCase("ADMIN"),
-        "/api/materias_GET", role -> role.equalsIgnoreCase("ADMIN"),
-        "/api/materias_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
+        "/api/materias_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
+        "/api/materias_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR"),
+	"/api/pensums_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
+	"/api/pensums_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
     );
 
     @Override
@@ -57,6 +59,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         : "Acceso denegado: Se requiere rol COORDINADOR para modificar materias";
                 sendError(response, HttpServletResponse.SC_FORBIDDEN, msg);
                 return;
+            }
+        } else if (path.startsWith("/api/pensums")) {
+	    String key = method.equalsIgnoreCase("GET") ? "/api/pensums_GET" : "/api/pensums_MODIFY";
+	    if (!accessRules.get(key).test(role)) {
+                String msg = method.equalsIgnoreCase("GET")
+			? "Acceso denegado: Se requiere rol ADMIN para ver pensums"
+			: "Acceso denegado: Se requiere rol COORDINADOR para modificar pensums";
+		sendError(response, HttpServletResponse.SC_FORBIDDEN, msg);
+		return;
             }
         }
 
