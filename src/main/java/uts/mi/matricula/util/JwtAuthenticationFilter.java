@@ -32,16 +32,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String method = request.getMethod();
+	String role = JwtUtil.getRoleFromToken(token);
+	String path = request.getRequestURI();
 
-        // Si el método no es GET, validar rol ADMIN
-        if (!method.equalsIgnoreCase("GET")) {
-            String role = JwtUtil.getRoleFromToken(token);
-            if (!"ADMIN".equalsIgnoreCase(role)) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para esta operacion");
-                return;
+	if (path.startsWith("/api/users")) {
+            // Si el método no es GET, validar rol ADMIN
+            if (!method.equalsIgnoreCase("GET")) {
+                if (!"ADMIN".equalsIgnoreCase(role)) {
+                   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                   response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para esta operacion");
+                   return;
+                }
             }
-        }
+	}
+
+	// Reglas para /api/materias/
+	if (path.startsWith("/api/materias")){
+	    if (method.equalsIgnoreCase("GET")) {
+	        if (!"ADMIN".equalsIgnoreCase(role)) {
+		    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para ver materias");
+		    return;
+                }
+	    } else {
+		if (!"COORDINADOR".equalsIgnoreCase(role)) {
+		    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    response.getWriter().write("Acceso denegado: Se requiere rol COORDINADOR para modificar materias");
+		    return;
+		}
+	    }
+	}
 
         // Continúa la cadena del filtro si el token es válido
         filterChain.doFilter(request, response);
@@ -49,8 +69,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Solo filtra los endpoints que deben estar protegidos
-        String path = request.getRequestURI();
         return path.startsWith("/auth"); // No filtrar /auth/*
     }
 }

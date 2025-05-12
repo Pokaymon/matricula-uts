@@ -13,7 +13,7 @@ public class SecurityConfig {
     public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter() {
         FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtAuthenticationFilter());
-        registrationBean.addUrlPatterns("/api/users/*"); /* Protege todos los endpoints de usuario*/
+        registrationBean.addUrlPatterns("/api/users/*", "/api/materias/*"); /* */
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }
