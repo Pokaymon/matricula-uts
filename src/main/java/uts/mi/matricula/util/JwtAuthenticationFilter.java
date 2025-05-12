@@ -6,9 +6,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
+import java.util.Map;
+import java.util.function.Predicate;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Map<String, Predicate<String>> accessRules = Map.of(
+        "/api/users", role -> role.equalsIgnoreCase("ADMIN"),
+        "/api/materias_GET", role -> role.equalsIgnoreCase("ADMIN"),
+        "/api/materias_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -18,58 +27,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token JWT faltante o invalido");
+            sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token JWT faltante o invalido");
             return;
         }
 
         String token = authHeader.substring(7);
 
         if (!JwtUtil.isTokenValid(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token JWT inválido o expirado");
+            sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token JWT invalido o expirado");
             return;
         }
 
         String method = request.getMethod();
-	String role = JwtUtil.getRoleFromToken(token);
-	String path = request.getRequestURI();
+        String role = JwtUtil.getRoleFromToken(token);
+        String path = request.getRequestURI();
 
-	if (path.startsWith("/api/users")) {
-            // Si el método no es GET, validar rol ADMIN
-            if (!method.equalsIgnoreCase("GET")) {
-                if (!"ADMIN".equalsIgnoreCase(role)) {
-                   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                   response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para esta operacion");
-                   return;
-                }
+        // Lógica de autorización basada en ruta y método
+        if (path.startsWith("/api/users") && !method.equalsIgnoreCase("GET")) {
+            if (!accessRules.get("/api/users").test(role)) {
+                sendError(response, HttpServletResponse.SC_FORBIDDEN,
+                          "Acceso denegado: Se requiere rol ADMIN para esta operacion");
+                return;
             }
-	}
+        } else if (path.startsWith("/api/materias")) {
+            String key = method.equalsIgnoreCase("GET") ? "/api/materias_GET" : "/api/materias_MODIFY";
+            if (!accessRules.get(key).test(role)) {
+                String msg = method.equalsIgnoreCase("GET")
+                        ? "Acceso denegado: Se requiere rol ADMIN para ver materias"
+                        : "Acceso denegado: Se requiere rol COORDINADOR para modificar materias";
+                sendError(response, HttpServletResponse.SC_FORBIDDEN, msg);
+                return;
+            }
+        }
 
-	// Reglas para /api/materias/
-	if (path.startsWith("/api/materias")){
-	    if (method.equalsIgnoreCase("GET")) {
-	        if (!"ADMIN".equalsIgnoreCase(role)) {
-		    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		    response.getWriter().write("Acceso denegado: Se requiere rol ADMIN para ver materias");
-		    return;
-                }
-	    } else {
-		if (!"COORDINADOR".equalsIgnoreCase(role)) {
-		    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		    response.getWriter().write("Acceso denegado: Se requiere rol COORDINADOR para modificar materias");
-		    return;
-		}
-	    }
-	}
-
-        // Continúa la cadena del filtro si el token es válido
         filterChain.doFilter(request, response);
+    }
+
+    private void sendError(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.getWriter().write(message);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return path.startsWith("/auth"); // No filtrar /auth/*
+        String path = request.getRequestURI();
+        return path.startsWith("/auth");
     }
 }
 
