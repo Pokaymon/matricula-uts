@@ -39,176 +39,11 @@
     </main>
   </section>
 
+  <br><br>
+
   <!-- Footer -->
   <div th:replace="fragments/footer :: footer"></div>
-
-  <!-- Logout -->
-  <script th:src="@{/js/useLogout.js}"></script>
-
-<!-- GET + DELETE -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const tbody = document.getElementById("userTableBody");
-
-    fetch("/api/users", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token")
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      data.forEach(user => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${user.cedula}</td>
-          <td>${user.username}</td>
-          <td>${user.nombre}</td>
-          <td>${user.apellido}</td>
-          <td>${user.rol}</td>
-          <td>
- 	    <button class="edit-btn"
-	      data-id="${user.id}"
-	      data-cedula="${user.cedula}" 
-    	      data-username="${user.username}"
-	      data-password="${user.password}" 
-              data-nombre="${user.nombre}" 
-              data-apellido="${user.apellido}" 
-              data-rol="${user.rol}">Editar</button>
-            <button class="delete-btn" data-id="${user.id}">Borrar</button>
-          </td>
-        `;
-        tbody.appendChild(row);
-
-        // Asignar evento al botón recién creado
-        const deleteButton = row.querySelector(".delete-btn");
-        deleteButton.addEventListener("click", () => {
-          const userId = deleteButton.getAttribute("data-id");
-          const confirmDelete = confirm("¿Estás seguro de que deseas eliminar este usuario?");
-          if (confirmDelete) {
-            fetch(`/api/users/${userId}`, {
-              method: "DELETE",
-              headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-              }
-            })
-            .then(response => {
-              if (!response.ok) throw new Error("Error al eliminar usuario");
-              alert("Usuario eliminado con éxito");
-              location.reload(); // Recargar tabla
-            })
-            .catch(error => alert(error.message));
-          }
-        });
-      });
-    })
-    .catch(error => console.error("Error al cargar usuarios:", error));
-  });
-</script>
-
-<!-- POST + PUT -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("userModal");
-    const form = document.getElementById("createUserForm");
-    const modalTitle = document.getElementById("modalTittle");
-    const submitButton = form.querySelector(".submit-button");
-    const openBtn = document.querySelector(".create_users_button");
-    const closeBtn = document.querySelector(".close-button");
-    const passwordField = document.getElementById("password");
-
-    let isEditing = false;
-
-    function limpiarFormulario() {
-      form.reset();
-      document.getElementById("userId").value = "";
-      isEditing = false;
-      modalTitle.textContent = "Crear Nuevo Usuario";
-      submitButton.textContent = "Guardar Usuario";
-      passwordField.style.display = "block";
-    }
-
-    openBtn.addEventListener("click", () => {
-      limpiarFormulario();  // Resetea y asegura que no esté en edición
-      modal.style.display = "block";
-    });
-
-    closeBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-      limpiarFormulario();
-    });
-
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.style.display = "none";
-        limpiarFormulario();
-      }
-    });
-
-    // Escuchar clicks en los botones de editar
-    document.addEventListener("click", (e) => {
-      if (e.target.classList.contains("edit-btn")) {
-        isEditing = true;
-        modal.style.display = "block";
-        modalTitle.textContent = "Editar Usuario";
-        submitButton.textContent = "Actualizar Usuario";
-
-        // Rellenar datos
-        document.getElementById("userId").value = e.target.getAttribute("data-id");
-        document.getElementById("cedula").value = e.target.getAttribute("data-cedula");
-        document.getElementById("username").value = e.target.getAttribute("data-username");
-	document.getElementById("password").value = e.target.getAttribute("data-password")
-        document.getElementById("nombre").value = e.target.getAttribute("data-nombre");
-        document.getElementById("apellido").value = e.target.getAttribute("data-apellido");
-        document.getElementById("rol").value = e.target.getAttribute("data-rol");
-
-        // Ocultar contraseña en modo edición
-        passwordField.style.display = "block";
-      }
-    });
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const userId = document.getElementById("userId").value;
-      const userData = {
-        cedula: document.getElementById("cedula").value,
-        username: document.getElementById("username").value,
-        nombre: document.getElementById("nombre").value,
-        apellido: document.getElementById("apellido").value,
-        rol: document.getElementById("rol").value
-      };
-
-      if (passwordField.value.trim() !== "") {
-        userData.password = passwordField.value;
-      }
-
-      const method = isEditing ? "PUT" : "POST";
-      const url = isEditing ? `/api/users/${userId}` : "/api/users";
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token")
-        },
-        body: JSON.stringify(userData)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error(`Error al ${isEditing ? "actualizar" : "crear"} usuario`);
-        return response.json();
-      })
-      .then(data => {
-        alert(`Usuario ${isEditing ? "actualizado" : "creado"} con éxito`);
-        modal.style.display = "none";
-        limpiarFormulario();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
-    });
-  });
-</script>
-
+            
 <!-- Modal para Crear Usuario -->
 <div id="userModal" class="modal">
   <div class="modal-content">
@@ -234,6 +69,12 @@
     </form>
   </div>
 </div>
+
+  <!-- Logout -->
+  <script th:src="@{/js/useLogout.js}"></script>
+
+  <!-- Script para hacer Fecths -->
+  <script th:src="@{/js/admin.js}"></script>
 
 </body>
 </html>
