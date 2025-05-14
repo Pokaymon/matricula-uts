@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Coordinator Pensums Page | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar_user :: navbar"></div>
+
+  <section>
+    <main class="container">
+      <h1 class="welcome-title">Bienvenido a Matrícula UTS | Coordinador</h1>
+
+      <div class="create_users_container">
+        <button class="create_users_button">Crear Pensum</button>
+      </div>
+
+      <table id="pensum-table">
+        <thead>
+          <tr>
+            <th>Carrera</th>
+            <th>Codigo</th>
+            <th>Fecha Inicio</th>
+            <th>Activo</th>
+  	    <th>Materias</th>
+	    <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="pensumTableBody">
+
+        </tbody>
+      </table>
+    </main>
+  </section>
+
+  <br><br>
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+<!-- Modal para Crear Pensum -->
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2 id="modalTittle">Crear Nuevo Pensum</h2>
+    <br>
+    <form id="createPensumForm">
+      <input type="hidden" id="pensumId" />
+      <input type="text" id="carrera" placeholder="Carrera" required />
+      <input type="text" id="codigo" placeholder="Codigo del Pensum" required />
+      <input type="date" id="fechaInicio" placeholder="Fecha de Inicio" required />
+      <label>
+	<input type="checkbox" id="activo" />
+	Pensum Activo
+      </label>
+      <label for="materias">Materias</label>
+      <select id="materias" multiple required>
+        <!-- Llenar dinamicamente con JS -->
+      </select>
+      <button type="submit" class="submit-button">Guardar Pensum</button>
+    </form>
+  </div>
+</div>
+
+  <!-- Logout -->
+  <script th:src="@{/js/useLogout.js}"></script>
+
+  <!-- Script para hacer Fecths -->
+  <script th:src="@{/js/coordinator.js}"></script>
+
+</body>
+</html>

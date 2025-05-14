@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Page | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+
+<script>
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "/login";
+  } else {
+    fetch("/api/users", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(users => {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const username = payload.sub;
+
+      const user = users.find(u => u.username === username);
+
+      if (!user) {
+        alert("Usuario no encontrado");
+        window.location.href = "/login";
+        return;
+      }
+
+      const expectedRole = "PROFESOR"; // cambia según la vista
+
+      if (user.rol !== expectedRole) {
+        // Redirige a la vista correcta
+        if (user.rol === "ADMIN") window.location.href = "/admin";
+        else if (user.rol === "ESTUDIANTE") window.locati
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar_user :: navbar"></div>
+
+  <section>
+    <main class="container">
+      <h1 class="welcome-title">Bienvenido a Matrícula UTS | Profesor</h1>
+    </main>
+  </section>
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Logout -->
+  <script th:src="@{/js/useLogout.js}"></script>
+
+</body>
+</html>

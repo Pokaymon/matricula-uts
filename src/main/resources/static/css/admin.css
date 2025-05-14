@@ -35,7 +35,7 @@ body {
 .create_users_button:hover {
   background-color: #006d5b;
 }
-#user-table {
+#user-table, #pensum-table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -43,22 +43,26 @@ body {
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 89, 77, 0.1);
 }
-#user-table thead {
+#user-table thead, #pensum-table thead {
   background-color: #007a69;
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 #user-table th,
-#user-table td {
+#pensum-table th,
+#user-table td, 
+#pensum-table td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #f2f2f2;
 }
-#user-table tr:nth-child(even) {
+#user-table tr:nth-child(even),
+#pensum-table tr:nth-child(even) {
   background-color: #b8e6dd;
 }
-#user-table tr:hover {
+#user-table tr:hover,
+#pensum-table tr:hover {
   background-color: #e0fdf4;
   transition: background-color 0.3s ease;
 }
