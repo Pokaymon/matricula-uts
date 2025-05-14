@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface MateriaRepository extends MongoRepository<Materia, String> {
     Optional<Materia> findByCodigo(String codigo);
     boolean existsByCodigo(String codigo);
+    boolean existsByNombre(String nombre);
+    Optional<Materia> findByNombre(String nombre);
 }

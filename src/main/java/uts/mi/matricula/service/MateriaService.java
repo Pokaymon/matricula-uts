@@ -23,11 +23,28 @@ public class MateriaService {
     }
 
     public Materia createMateria(Materia materia) {
-        return materiaRepository.save(materia);
+        if (materiaRepository.existsByCodigo(materia.getCodigo())) {
+	    throw new RuntimeException("Ya existe una materia con ese código.");
+	}
+	if (materiaRepository.existsByNombre(materia.getNombre())) {
+	    throw new RuntimeException("Ya existe una materia con ese nombre.");
+	}
+	return materiaRepository.save(materia);
     }
 
     public Materia updateMateria(String id, Materia updatedMateria) {
         return materiaRepository.findById(id).map(materia -> {
+
+	    if (!materia.getCodigo().equals(updatedMateria.getCodigo())
+		&& materiaRepository.existsByCodigo(updatedMateria.getCodigo())) {
+	      throw new RuntimeException("Ya existe otra materia con ese código.");
+	    }
+
+	    if (!materia.getNombre().equals(updatedMateria.getNombre())
+		&& materiaRepository.existsByNombre(updatedMateria.getNombre())) {
+	      throw new RuntimeException("Ya existe otra materia con ese nombre.");
+	    }
+
             materia.setCodigo(updatedMateria.getCodigo());
             materia.setNombre(updatedMateria.getNombre());
             materia.setCreditos(updatedMateria.getCreditos());

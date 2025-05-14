@@ -15,13 +15,15 @@ public class Materia {
     @Indexed(unique = true)
     private String codigo;
 
+    @Indexed(unique = true)
     private String nombre;
+
     private int creditos;
     private int semestre;
     private String tipo; // "obligatoria" o "electiva"
     private List<String> prerequisitos;
     private String descripcion;
-    
+
     // Nuevo campo: Profesor asignado a la materia
     private String profesorId; // Almacena el ID del profesor
 
