@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = form.querySelector(".submit-button");
   const openBtn = document.querySelector(".create_users_button");
   const closeBtn = document.querySelector(".close-button");
-  const materiasSelect = document.getElementById("materias");
+  const materiasContainer = document.getElementById("materias-checkboxes");
 
   let isEditing = false;
 
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     isEditing = false;
     modalTitle.textContent = "Crear Nuevo Pensum";
     submitButton.textContent = "Guardar Pensum";
-    [...materiasSelect.options].forEach(option => option.selected = false);
+    document.querySelectorAll(".materia-checkbox").forEach(cb => cb.checked = false);
   };
 
   const abrirModal = () => {
@@ -69,12 +69,15 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(res => res.json())
       .then(data => {
-        materiasSelect.innerHTML = "";
+        materiasContainer.innerHTML = "";
         data.forEach(m => {
-          const option = document.createElement("option");
-          option.value = m.codigo;
-          option.textContent = `${m.codigo} - ${m.nombre}`;
-          materiasSelect.appendChild(option);
+          const label = document.createElement("label");
+          label.style.display = "block";
+          label.innerHTML = `
+            <input type="checkbox" value="${m.codigo}" class="materia-checkbox" />
+            ${m.codigo} - ${m.nombre}
+          `;
+          materiasContainer.appendChild(label);
         });
       })
       .catch(err => console.error("Error al cargar materias:", err));
@@ -106,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
 
-    [...materiasSelect.options].forEach(opt => {
-      opt.selected = pensum.materias.includes(opt.value);
+    document.querySelectorAll(".materia-checkbox").forEach(cb => {
+      cb.checked = pensum.materias.includes(cb.value);
     });
   };
 
@@ -134,13 +137,21 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", e => {
     e.preventDefault();
 
+    const materiasSeleccionadas = Array.from(document.querySelectorAll(".materia-checkbox:checked")).map(cb => cb.value);
+
+    // Validacion
+    if (materiasSeleccionadas.length === 0) {
+      alert("Debes seleccionar al menos una materia para continuar.");
+      return;
+    }
+
     const pensumId = document.getElementById("pensumId").value;
     const pensumData = {
       carrera: document.getElementById("carrera").value,
       codigo: document.getElementById("codigo").value,
       fechaInicio: document.getElementById("fechaInicio").value,
       activo: document.getElementById("activo").checked,
-      materias: Array.from(materiasSelect.selectedOptions).map(opt => opt.value)
+      materias: materiasSeleccionadas
     };
 
     const method = isEditing ? "PUT" : "POST";
