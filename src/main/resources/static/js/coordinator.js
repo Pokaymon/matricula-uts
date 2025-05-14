@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Error al cargar pensums:", err));
   };
 
-  const cargarMaterias = () => {
+  const cargarMaterias = (materiasSeleccionadas = []) => {
     fetch("/api/materias", {
       headers: {
         "Content-Type": "application/json",
@@ -73,10 +73,19 @@ document.addEventListener("DOMContentLoaded", () => {
         data.forEach(m => {
           const label = document.createElement("label");
           label.style.display = "block";
-          label.innerHTML = `
-            <input type="checkbox" value="${m.codigo}" class="materia-checkbox" />
-            ${m.codigo} - ${m.nombre}
-          `;
+
+          const checkbox = document.createElement("input");
+	  checkbox.type = "checkbox";
+	  checkbox.value = m.codigo;
+	  checkbox.classList.add("materia-checkbox");
+
+	  // Marcar selecciones de la lista de materias
+	  if (materiasSeleccionadas.includes(m.codigo)) {
+	    checkbox.checked = true;
+	  }
+
+	  label.appendChild(checkbox);
+	  label.appendChild(document.createTextNode(` ${m.codigo} - ${m.nombre}`));
           materiasContainer.appendChild(label);
         });
       })
@@ -109,9 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
 
-    document.querySelectorAll(".materia-checkbox").forEach(cb => {
-      cb.checked = pensum.materias.includes(cb.value);
-    });
+    // Cargar Materias
+    cargarMaterias(pensum.materias || []);
   };
 
   openBtn.addEventListener("click", () => {
@@ -137,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", e => {
     e.preventDefault();
 
+    // Mapear
     const materiasSeleccionadas = Array.from(document.querySelectorAll(".materia-checkbox:checked")).map(cb => cb.value);
 
     // Validacion

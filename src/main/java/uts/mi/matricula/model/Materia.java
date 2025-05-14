@@ -21,11 +21,14 @@ public class Materia {
     private String tipo; // "obligatoria" o "electiva"
     private List<String> prerequisitos;
     private String descripcion;
+    
+    // Nuevo campo: Profesor asignado a la materia
+    private String profesorId; // Almacena el ID del profesor
 
     public Materia() {}
 
     public Materia(String id, String codigo, String nombre, int creditos, int semestre,
-                   String tipo, List<String> prerequisitos, String descripcion) {
+                   String tipo, List<String> prerequisitos, String descripcion, String profesorId) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -34,11 +37,13 @@ public class Materia {
         this.tipo = tipo;
         this.prerequisitos = prerequisitos;
         this.descripcion = descripcion;
+        this.profesorId = profesorId;
     }
 
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -46,6 +51,7 @@ public class Materia {
     public String getCodigo() {
         return codigo;
     }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
@@ -53,6 +59,7 @@ public class Materia {
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -60,6 +67,7 @@ public class Materia {
     public int getCreditos() {
         return creditos;
     }
+
     public void setCreditos(int creditos) {
         this.creditos = creditos;
     }
@@ -67,6 +75,7 @@ public class Materia {
     public int getSemestre() {
         return semestre;
     }
+
     public void setSemestre(int semestre) {
         this.semestre = semestre;
     }
@@ -74,6 +83,7 @@ public class Materia {
     public String getTipo() {
         return tipo;
     }
+
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
@@ -81,6 +91,7 @@ public class Materia {
     public List<String> getPrerequisitos() {
         return prerequisitos;
     }
+
     public void setPrerequisitos(List<String> prerequisitos) {
         this.prerequisitos = prerequisitos;
     }
@@ -88,8 +99,17 @@ public class Materia {
     public String getDescripcion() {
         return descripcion;
     }
+
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-}
 
+    // Métodos para el nuevo campo
+    public String getProfesorId() {
+        return profesorId;
+    }
+
+    public void setProfesorId(String profesorId) {
+        this.profesorId = profesorId;
+    }
+}

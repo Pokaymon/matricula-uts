@@ -46,7 +46,7 @@ public class WebController {
     return "unauthorized";
   }
 
-  @GetMapping("/coordinator/pensum")
+  @GetMapping("/pensums")
   public String coordinatorPensum(){
     return "coordinator/coordinator_pensums";
   }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Materias | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/tablas.css}"> 
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar_user :: navbar"></div>
+
+<main class="container">
+  <h2 class="welcome-title">Materias Registradas</h2>
+
+  <div class="button-group">
+    <a href="/materias/nueva" class="btn">Registrar Nueva Materia</a>
+    <a href="/coordinator" class="btn">Volver</a>  <!-- Botón para volver -->
+  </div>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Créditos</th>
+        <th>Semestre</th>
+        <th>Tipo</th>
+        <th>Profesor</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="materia : ${materias}">
+        <td th:text="${materia.codigo}">Código</td>
+        <td th:text="${materia.nombre}">Nombre</td>
+        <td th:text="${materia.creditos}">Créditos</td>
+        <td th:text="${materia.semestre}">Semestre</td>
+        <td th:text="${materia.tipo}">Tipo</td>
+        <td th:text="${materia.profesorId}">Profesor</td>
+        <td>
+          <a th:href="@{'/materias/editar/' + ${materia.id}}" class="btn small">Editar</a>
+		  
+		  <a th:href="@{'/materias/eliminar/' + ${materia.id}}" class="btn small danger" onclick="return confirm('¿Eliminar esta materia?')">Eliminar</a>
+
+		 
+
+      </td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/useLogout.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+
+
+</body>
+</html>

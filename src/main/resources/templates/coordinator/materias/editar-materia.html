@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Materia | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar_user :: navbar"></div>
+
+<main class="container">
+  <h2 class="welcome-title">Editar Materia</h2>
+
+  <form th:action="@{/materias/actualizar}" th:object="${materia}" method="post" class="form-container">
+    <!-- Campo oculto para el ID -->
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Código: <input type="text" th:field="*{codigo}" required /></label>
+    <label>Nombre: <input type="text" th:field="*{nombre}" required /></label>
+    <label>Créditos: <input type="number" th:field="*{creditos}" required /></label>
+    <label>Semestre: <input type="number" th:field="*{semestre}" required /></label>
+
+    <label>Tipo:
+      <select th:field="*{tipo}">
+        <option value="obligatoria" th:selected="${materia.tipo == 'obligatoria'}">Obligatoria</option>
+        <option value="electiva" th:selected="${materia.tipo == 'electiva'}">Electiva</option>
+      </select>
+    </label>
+
+    <label>Prerequisitos (códigos separados por coma): 
+      <input type="text" th:field="*{prerequisitos}" placeholder="Ej: MAT101,FIS102" />
+    </label>
+
+    <label>Descripción:
+      <textarea th:field="*{descripcion}"></textarea>
+    </label>
+
+    <label>Profesor ID:
+      <input type="text" th:field="*{profesorId}" placeholder="Ej: prof123" />
+    </label>
+
+    <button type="submit" class="btn">Actualizar Materia</button>
+  </form>
+
+  <a href="/materias" class="btn">Volver al Listado</a>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/useLogout.js}"></script>
+
+</body>
+</html>

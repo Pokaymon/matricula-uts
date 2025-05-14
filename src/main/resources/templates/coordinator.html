@@ -7,6 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/tablas.css}">
 </head>
 <body>
 
@@ -16,6 +17,13 @@
   <section>
     <main class="container">
       <h1 class="welcome-title">Bienvenido a Matrícula UTS | Coordinador</h1>
+
+      <!-- Botón para ir a la vista de materias -->
+      <a th:href="@{/materias}" class="btn">Ver Materias</a>
+
+      <!-- Botón para ir a la vista de pensums -->
+      <a th:href="@{/pensums}" class="btn">Ver Pensums</a>
+
     </main>
   </section>
 

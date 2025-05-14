@@ -22,31 +22,25 @@ public class MateriaService {
         return materiaRepository.findById(id);
     }
 
-    public Materia createMateria(Materia materia) throws Exception {
-        if (materiaRepository.existsByCodigo(materia.getCodigo())) {
-            throw new Exception("Ya existe una materia con el código: " + materia.getCodigo());
-        }
+    public Materia createMateria(Materia materia) {
         return materiaRepository.save(materia);
     }
 
-    public Materia updateMateria(String id, Materia materia) throws Exception {
-        Optional<Materia> existente = materiaRepository.findById(id);
-        if (existente.isEmpty()) {
-            throw new Exception("La materia no existe.");
-        }
-
-        Materia actual = existente.get();
-
-        if (!actual.getCodigo().equals(materia.getCodigo()) && materiaRepository.existsByCodigo(materia.getCodigo())) {
-            throw new Exception("Ya existe otra materia con el código: " + materia.getCodigo());
-        }
-
-        materia.setId(id);
-        return materiaRepository.save(materia);
+    public Materia updateMateria(String id, Materia updatedMateria) {
+        return materiaRepository.findById(id).map(materia -> {
+            materia.setCodigo(updatedMateria.getCodigo());
+            materia.setNombre(updatedMateria.getNombre());
+            materia.setCreditos(updatedMateria.getCreditos());
+            materia.setSemestre(updatedMateria.getSemestre());
+            materia.setTipo(updatedMateria.getTipo());
+            materia.setPrerequisitos(updatedMateria.getPrerequisitos());
+            materia.setDescripcion(updatedMateria.getDescripcion());
+            materia.setProfesorId(updatedMateria.getProfesorId()); // <- aquí
+            return materiaRepository.save(materia);
+        }).orElseThrow(() -> new RuntimeException("Materia no encontrada"));
     }
 
     public void deleteMateria(String id) {
         materiaRepository.deleteById(id);
     }
 }
-
