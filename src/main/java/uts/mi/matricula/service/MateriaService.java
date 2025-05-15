@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.repository.MateriaRepository;
+import uts.mi.matricula.model.Pensum;
+import uts.mi.matricula.repository.PensumRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,9 @@ public class MateriaService {
 
     @Autowired
     private MateriaRepository materiaRepository;
+
+    @Autowired
+    private PensumRepository pensumRepository;
 
     public List<Materia> getAllMaterias() {
         return materiaRepository.findAll();
@@ -58,6 +63,22 @@ public class MateriaService {
     }
 
     public void deleteMateria(String id) {
+        // Buscar la materia primero
+        Materia materia = materiaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+
+        String codigo = materia.getCodigo(); // ← lo que guarda el Pensum
+
+        // Eliminar el código de materia en todos los pensums
+        List<Pensum> pensums = pensumRepository.findAll();
+        for (Pensum pensum : pensums) {
+            boolean removed = pensum.getMaterias().removeIf(c -> c.equals(codigo));
+            if (removed) {
+                pensumRepository.save(pensum);
+            }
+        }
+
+        // Ahora sí, elimina la materia
         materiaRepository.deleteById(id);
     }
 }

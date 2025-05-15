@@ -15,7 +15,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(roleInterceptor)
-                .addPathPatterns("/admin", "/student", "/coordinator", "/teacher", "/audit");
+                .addPathPatterns(
+
+		"/admin", "/student", "/coordinator", "/teacher", "/audit", "/pensums",
+		"/materias", "/materias/nueva", "/materias/editar/*" /* */
+
+		);
     }
 }
 

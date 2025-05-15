@@ -21,6 +21,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	"/api/pensums_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
     );
 
+    private boolean matchesAnyPath(String path, String... prefixes) {
+        for (String prefix : prefixes) {
+            if (path.startsWith(prefix)) return true;
+        }
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -51,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                           "Acceso denegado: Se requiere rol ADMIN para esta operacion");
                 return;
             }
-        } else if (path.startsWith("/api/materias")) {
+        } else if (matchesAnyPath(path, "/api/materias")) {
             String key = method.equalsIgnoreCase("GET") ? "/api/materias_GET" : "/api/materias_MODIFY";
             if (!accessRules.get(key).test(role)) {
                 String msg = method.equalsIgnoreCase("GET")
