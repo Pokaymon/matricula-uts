@@ -28,7 +28,18 @@
         <option value="Electiva">Electiva</option>
       </select>
     </label>
-    <label>Prerequisitos: <input type="text" th:field="*{prerequisitos}" placeholder="Ej: MAT101,FIS102" /></label>
+
+    <label>Prerequisitos:</label>
+    <div class="checkbox-list">
+      <div th:each="m : ${materiasExistentes}" class="checkbox-item">
+        <input type="checkbox"
+             th:value="${m.codigo}"
+             th:field="*{prerequisitos}"
+             th:id="${'materia_' + m.codigo}" />
+        <label th:for="${'materia_' + m.codigo}" th:text="${m.nombre + ' (' + m.codigo + ')'}"></label>
+      </div>
+    </div>
+
     <label>Descripción: <textarea th:field="*{descripcion}"></textarea></label>
     <label>Profesor:
       <select th:field="*{profesorId}" required>

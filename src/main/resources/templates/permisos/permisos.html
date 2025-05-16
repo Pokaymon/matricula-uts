@@ -2,28 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Coordinator Page | UTS</title>
+  <title>Admin Page | UTS</title>
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
-  <link rel="stylesheet" th:href="@{/css/tablas.css}">
+  <link rel ="stylesheet" th:href="@{/css/perms.css}">
 </head>
 <body>
 
   <!-- Navbar -->
   <div th:replace="fragments/navbar_user :: navbar"></div>
 
-  <section>
+  <setion>
     <main class="container">
-      <h1 class="welcome-title">Bienvenido a Matrícula UTS | Coordinador</h1>
+	<h1 class="welcome-title">Aqui puedes Gestionar los Permisos</h1>
 
-      <!-- Botón para ir a la vista de materias -->
-      <a th:href="@{/materias}" class="btn">Ver Materias</a>
+	<div class="perms-container">
 
-      <!-- Botón para ir a la vista de pensums -->
-      <a th:href="@{/pensums}" class="btn">Ver Pensums</a>
-
+	</div>
     </main>
   </section>
 
@@ -32,6 +28,9 @@
 
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>
+
+  <!-- Script para hacer Fecths -->
+  <script th:src="@{/js/perms.js}"></script>
 
 </body>
 </html>

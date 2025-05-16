@@ -33,9 +33,17 @@
       </select>
     </label>
 
-    <label>Prerequisitos (códigos separados por coma): 
-      <input type="text" th:field="*{prerequisitos}" placeholder="Ej: MAT101,FIS102" />
-    </label>
+    <label>Prerequisitos:</label>
+    <div class="checkbox-list">
+      <div th:each="m : ${materiasExistentes}" class="checkbox-item">
+        <input type="checkbox"
+             th:id="${'materia_' + m.codigo}"
+             th:value="${m.codigo}"
+             th:field="*{prerequisitos}"
+             th:checked="${#lists.contains(materia.prerequisitos, m.codigo)}" />
+        <label th:for="${'materia_' + m.codigo}" th:text="${m.nombre + ' (' + m.codigo + ')'}"></label>
+      </div>
+    </div>
 
     <label>Descripción:
       <textarea th:field="*{descripcion}"></textarea>
