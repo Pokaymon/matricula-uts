@@ -54,7 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Lógica de autorización basada en ruta y método
-        if (path.startsWith("/api/users")) {
+        if (path.equals("/api/users/me") && method.equalsIgnoreCase("GET")) {
+            filterChain.doFilter(request, response);
+            return;
+        } else if (path.startsWith("/api/users")) {
             String key = method.equalsIgnoreCase("GET") ? "/api/users_GET" : "/api/users_MODIFY";
             if (!accessRules.get(key).test(role)) {
                 String msg = method.equalsIgnoreCase("GET")

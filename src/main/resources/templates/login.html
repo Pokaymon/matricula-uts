@@ -98,7 +98,7 @@
         localStorage.setItem("token", data.token);
 
         // Ahora obtener el detalle del usuario para verificar su rol
-        const userResponse = await fetch("/api/users", {
+        const userResponse = await fetch("/api/users/me", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${data.token}`
@@ -115,10 +115,8 @@
           }).showToast();
         } else {
 
-          const userDataList = await userResponse.json();
-
-          // Buscar usuario que acaba de iniciar sesión
-          const user = userDataList.find(u => u.username === usuario);
+	  // Conseguir user.me
+          const user = await userResponse.json();
 
  	  if (!user) {
             Toastify({

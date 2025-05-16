@@ -1,6 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".perms-container");
 
+function getTokenFromCookies(name = "token") {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+}
+
     fetch("/api/permisos")
         .then(response => response.json())
         .then(permisos => {
@@ -18,7 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const updated = { ...p, estado: checkbox.checked };
                     fetch(`/api/permisos/${p.id}`, {
                         method: "PUT",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+
+			},
                         body: JSON.stringify(updated)
                     })
                     .then(res => {

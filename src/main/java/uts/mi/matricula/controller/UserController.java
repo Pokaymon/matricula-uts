@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import uts.mi.matricula.model.User;
 import uts.mi.matricula.service.UserService;
 import uts.mi.matricula.repository.UserRepository;
+import uts.mi.matricula.util.JwtUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,18 +73,22 @@ public class UserController {
     public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token JWT faltante o inválido");
+            return ResponseEntity.status(401).body("Token JWT faltante o invalido");
         }
 
         String token = authHeader.substring(7);
         if (!JwtUtil.isTokenValid(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token JWT inválido o expirado");
+            return ResponseEntity.status(401).body("Token JWT invalido o expirado");
         }
 
         String username = JwtUtil.getUsernameFromToken(token);
-        Optional<User> userOpt = userRepository.findByUsername(username);
-        return userOpt.map(ResponseEntity::ok)
-                  .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
+            Optional<User> userOpt = userRepository.findByUsername(username);
+
+        if (userOpt.isPresent()) {
+            return ResponseEntity.ok(userOpt.get());
+        } else {
+            return ResponseEntity.status(404).body("Usuario no encontrado");
+        }
     }
 }
 
