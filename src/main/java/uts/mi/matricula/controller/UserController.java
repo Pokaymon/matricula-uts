@@ -63,5 +63,23 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token JWT faltante o inválido");
+        }
+
+        String token = authHeader.substring(7);
+        if (!JwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token JWT inválido o expirado");
+        }
+
+        String username = JwtUtil.getUsernameFromToken(token);
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        return userOpt.map(ResponseEntity::ok)
+                  .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
+    }
 }
 
