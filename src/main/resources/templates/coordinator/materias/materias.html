@@ -7,7 +7,8 @@
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/admin.css}">
-  <link rel="stylesheet" th:href="@{/css/tablas.css}"> 
+  <link rel="stylesheet" th:href="@{/css/tablas.css}">
+  <link rel="stylesheet" th:href="@{/css/tooltip.css}"> 
 </head>
 <body>
 
@@ -40,7 +41,11 @@
         <td th:text="${materia.creditos}">Créditos</td>
         <td th:text="${materia.semestre}">Semestre</td>
         <td th:text="${materia.tipo}">Tipo</td>
-        <td th:text="${materia.profesorId}">Profesor</td>
+        <td 
+          th:text="${materia.profesorId}" 
+          th:attr="data-cedula=${materia.profesorId}"
+          class="profesor-cedula">Profesor
+        </td>
         <td>
           <a th:href="@{'/materias/editar/' + ${materia.id}}" class="btn small">Editar</a>
 		  
@@ -56,6 +61,10 @@
 
 <!-- Footer -->
 <div th:replace="fragments/footer :: footer"></div>
+
+<!-- Tooltip -->
+<div id="tooltip-profesor" class="profesor-tooltip hidden"></div>
+<script th:src="@{/js/tooltipProfesor.js}"></script>
 
 <script th:src="@{/js/useLogout.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>

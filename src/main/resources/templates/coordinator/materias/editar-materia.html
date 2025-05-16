@@ -41,8 +41,15 @@
       <textarea th:field="*{descripcion}"></textarea>
     </label>
 
-    <label>Profesor ID:
-      <input type="text" th:field="*{profesorId}" placeholder="Ej: prof123" />
+    <label>Profesor:
+      <select th:field="*{profesorId}" required>
+        <option value="" disabled>Seleccione un profesor</option>
+        <option th:each="profesor : ${profesores}"
+            th:value="${profesor.cedula}"
+            th:text="${profesor.nombre} + ' ' + ${profesor.apellido}"
+            th:selected="${profesor.cedula == materia.profesorId}">
+        </option>
+      </select>
     </label>
 
     <button type="submit" class="btn">Actualizar Materia</button>

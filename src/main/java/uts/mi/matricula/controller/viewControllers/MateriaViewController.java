@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.service.MateriaService;
+import uts.mi.matricula.repository.UserRepository;
 
 @Controller
 @RequestMapping("/materias")
@@ -13,6 +14,9 @@ public class MateriaViewController {
 
     @Autowired
     private MateriaService materiaService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Vista de todas las materias
     @GetMapping
@@ -25,6 +29,7 @@ public class MateriaViewController {
     @GetMapping("/nueva")
     public String crearMateriaForm(Model model) {
         model.addAttribute("materia", new Materia());  // Crear un objeto vacío para el formulario
+	model.addAttribute("profesores", userRepository.findByRolIgnoreCase("PROFESOR"));
         return "/coordinator/materias/crear-materia";  // Nombre de la vista Thymeleaf para crear materia
     }
 
@@ -38,7 +43,12 @@ public class MateriaViewController {
     // Vista para editar una materia existente
     @GetMapping("/editar/{id}")
     public String editarMateriaForm(@PathVariable String id, Model model) {
-        model.addAttribute("materia", materiaService.getMateriaById(id).orElseThrow(() -> new RuntimeException("Materia no encontrada")));
+        Materia materia = materiaService.getMateriaById(id)
+	    .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+
+	model.addAttribute("materia", materia);
+	model.addAttribute("profesores", userRepository.findByRolIgnoreCase("PROFESOR"));
+
         return "/coordinator/materias/editar-materia";  // Nombre de la vista Thymeleaf para editar materia
     }
 

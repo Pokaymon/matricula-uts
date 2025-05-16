@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uts.mi.matricula.model.User;
 import uts.mi.matricula.service.UserService;
+import uts.mi.matricula.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -26,6 +30,14 @@ public class UserController {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/profesores/{cedula}")
+    public ResponseEntity<?> obtenerProfesorPorCedula(@PathVariable String cedula) {
+	return userRepository.findByCedula(cedula)
+	    .filter(user -> "PROFESOR".equalsIgnoreCase(user.getRol()))
+	    .map(ResponseEntity::ok)
+	    .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping

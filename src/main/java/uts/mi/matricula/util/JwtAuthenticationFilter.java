@@ -14,11 +14,12 @@ import java.util.function.Predicate;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Map<String, Predicate<String>> accessRules = Map.of(
-        "/api/users", role -> role.equalsIgnoreCase("ADMIN"),
+        "/api/users_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
+        "/api/users_MODIFY", role -> role.equalsIgnoreCase("ADMIN"),
         "/api/materias_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
         "/api/materias_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR"),
-	"/api/pensums_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
-	"/api/pensums_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
+        "/api/pensums_GET", role -> role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("COORDINADOR"),
+        "/api/pensums_MODIFY", role -> role.equalsIgnoreCase("COORDINADOR")
     );
 
     private boolean matchesAnyPath(String path, String... prefixes) {
@@ -52,10 +53,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Lógica de autorización basada en ruta y método
-        if (path.startsWith("/api/users") && !method.equalsIgnoreCase("GET")) {
-            if (!accessRules.get("/api/users").test(role)) {
-                sendError(response, HttpServletResponse.SC_FORBIDDEN,
-                          "Acceso denegado: Se requiere rol ADMIN para esta operacion");
+        if (path.startsWith("/api/users")) {
+            String key = method.equalsIgnoreCase("GET") ? "/api/users_GET" : "/api/users_MODIFY";
+            if (!accessRules.get(key).test(role)) {
+                String msg = method.equalsIgnoreCase("GET")
+                    ? "Acceso denegado: Se requiere rol ADMIN o COORDINADOR para consultar usuarios"
+                    : "Acceso denegado: Se requiere rol ADMIN para modificar usuarios";
+                sendError(response, HttpServletResponse.SC_FORBIDDEN, msg);
                 return;
             }
         } else if (matchesAnyPath(path, "/api/materias")) {

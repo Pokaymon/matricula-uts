@@ -30,7 +30,15 @@
     </label>
     <label>Prerequisitos: <input type="text" th:field="*{prerequisitos}" placeholder="Ej: MAT101,FIS102" /></label>
     <label>Descripción: <textarea th:field="*{descripcion}"></textarea></label>
-    <label>Profesor ID: <input type="text" th:field="*{profesorId}" /></label>
+    <label>Profesor:
+      <select th:field="*{profesorId}" required>
+        <option value="" disabled selected>Seleccione un profesor</option>
+        <option th:each="profesor : ${profesores}"
+            th:value="${profesor.cedula}"
+            th:text="${profesor.nombre} + ' ' + ${profesor.apellido}">
+        </option>
+      </select>
+    </label>
 
     <button type="submit" class="btn">Guardar Materia</button>
   </form>
