@@ -25,7 +25,7 @@ public class Materia {
     private String descripcion;
 
     // Nuevo campo: Profesor asignado a la materia
-    private String profesorId; // Almacena el ID del profesor
+    private String profesorId; // Almacena la Cedula del profesor
 
     public Materia() {}
 
