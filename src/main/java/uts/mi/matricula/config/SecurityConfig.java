@@ -15,7 +15,7 @@ public class SecurityConfig {
         registrationBean.setFilter(new JwtAuthenticationFilter());
         registrationBean.addUrlPatterns(
 
-	"/api/users/*", "/api/materias/*", "/api/pensums/*"
+	"/api/users/*", "/api/materias/*", "/api/pensums/*", "/api/permisos/*"
 
 	);/* */
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);

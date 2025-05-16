@@ -21,6 +21,11 @@ public class WebController {
     return "admin";
   }
 
+  @GetMapping("/perms")
+  public String perms(){
+    return "permisos/permisos";
+  }
+
   @GetMapping("/student")
   public String student(){
     return "student";
@@ -29,6 +34,11 @@ public class WebController {
   @GetMapping("/coordinator")
   public String coordinator(){
     return "coordinator";
+  }
+
+  @GetMapping("/pensums")
+  public String coordinatorPensum(){
+    return "coordinator/coordinator_pensums";
   }
 
   @GetMapping("/teacher")
@@ -44,10 +54,5 @@ public class WebController {
   @GetMapping("/unauthorized")
   public String unauthorized(){
     return "unauthorized";
-  }
-
-  @GetMapping("/pensums")
-  public String coordinatorPensum(){
-    return "coordinator/coordinator_pensums";
   }
 }
