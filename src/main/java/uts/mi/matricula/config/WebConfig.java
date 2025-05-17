@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns(
 
 		"/admin", "/student", "/coordinator", "/teacher", "/audit", "/pensums",
-		"/materias", "/materias/nueva", "/materias/editar/*" /* */
+		"/materias", "/materias/nueva", "/materias/editar/*", /* */
+		"/perms", "/info/*" /* */
 
 		);
     }

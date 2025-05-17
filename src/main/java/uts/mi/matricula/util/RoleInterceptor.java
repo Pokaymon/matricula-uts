@@ -14,15 +14,18 @@ public class RoleInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_COOKIE_NAME = "token";
 
-    private static final Map<String, String> roleRoutes = Map.of(
-        "/admin", "ADMIN",
-        "/student", "ESTUDIANTE",
-        "/coordinator", "COORDINADOR",
-        "/teacher", "PROFESOR",
-        "/audit", "AUDITOR",
-        "/materias", "COORDINADOR",
-        "/materias/*",/* */ "COORDINADOR",
-	"/pensums", "COORDINADOR"
+    private static final Map<String, String> roleRoutes = Map.ofEntries(
+        Map.entry("/admin", "ADMIN"),
+        Map.entry("/student", "ESTUDIANTE"),
+        Map.entry("/coordinator", "COORDINADOR"),
+        Map.entry("/teacher", "PROFESOR"),
+        Map.entry("/audit", "AUDITOR"),
+        Map.entry("/materias", "COORDINADOR"),
+        Map.entry("/materias/*", "COORDINADOR"), /* */
+        Map.entry("/pensums", "COORDINADOR"),
+        Map.entry("/perms", "ADMIN"),
+        Map.entry("/info/admin", "ADMIN"),
+        Map.entry("/info/coordinator", "COORDINADOR")
     );
 
     @Override

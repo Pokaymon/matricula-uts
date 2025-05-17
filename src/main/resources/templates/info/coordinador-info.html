@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido Coordinador</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+    <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body class="fondo">
+
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar_user :: navbar"></div>
+
+    <!-- Contenedor centrado -->
+	<main>
+	  <div class="card-admin">
+	    <h2 class="titulo">¡Bienvenido, Coordinador!</h2>
+	    <p class="mensaje">Desde aquí puedes gestionar los pensums, materias y asignar profesores según tu programa.</p>
+
+	    <div class="seccion">
+	      <h3 class="subtitulo">¿Qué puedes hacer como Coordinador?</h3>
+	      <ul class="lista">
+	        <li><strong>Gestión de Pensums:</strong> Crea, edita o elimina pensums académicos para programas y carreras. Puedes actualizarlos según las necesidades curriculares.</li>
+	        <li><strong>Gestión de Materias:</strong> Crea, modifica o elimina materias dentro de los pensums. Define requisitos, créditos y otros detalles importantes.</li>
+	        <li><strong>Asignación de Profesores:</strong> Asigna docentes a las materias correspondientes dentro de cada pensum.</li>
+	      </ul>
+	    </div>
+
+	    <div class="seccion">
+	      <h3 class="subtitulo">Ejemplos de tareas que puedes realizar</h3>
+	      <ul class="lista">
+	        <li>Crear un nuevo pensum para un programa académico.</li>
+	        <li>Añadir nuevas materias a un pensum existente.</li>
+	        <li>Asignar un profesor responsable para cada materia.</li>
+	      </ul>
+	    </div>
+	
+            <div class="button_container">
+                <br>
+                <a th:href="@{/materias}" class="boton">Gestionar Materias</a>
+                <br>
+                <a th:href="@{/pensums}" class="boton">Gestionar Pensums</a>
+            </div>	    
+
+	  </div>
+	</main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/useLogout.js}"></script>
+</body>
+</html>

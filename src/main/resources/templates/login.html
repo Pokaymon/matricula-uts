@@ -132,7 +132,7 @@
           // Verificamos el rol del usuario y redirigimos
           if (user.rol === "ADMIN") {
             setTimeout(() => {
-              window.location.href = "/admin";
+              window.location.href = "/info/admin";
             }, 1000);
           } else if (user.rol === "ESTUDIANTE") {
             setTimeout(() => {
@@ -140,7 +140,7 @@
             }, 1000);
           } else if (user.rol === "COORDINADOR") {
             setTimeout(() => {
-              window.location.href = "/coordinator";
+              window.location.href = "/info/coordinator";
             }, 1000);
           } else if (user.rol === "PROFESOR") {
             setTimeout(() => {

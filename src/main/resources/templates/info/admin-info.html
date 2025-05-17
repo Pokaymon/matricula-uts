@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido Administrador</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+</head>
+<body class="fondo">
+	
+	<!-- Navbar -->
+	<div th:replace="fragments/navbar_user :: navbar"></div>
+	
+	<main>
+	  <div class="card card-admin">
+	    <h1 class="titulo">¡Bienvenido, Administrador!</h1>
+	    <p class="mensaje">
+	      Desde aquí puedes gestionar usuarios, asignar permisos y supervisar el sistema académico.
+	    </p>
+	    <div class="seccion">
+	      <h2 class="subtitulo">¿Qué puedes hacer como Administrador?</h2>
+	      <ul class="lista">
+	        <li>
+	          <strong>Gestión de usuarios:</strong> Crea, consulta, edita o elimina usuarios. Puedes asignarles roles específicos y permisos personalizados.
+	        </li>
+	        <li>
+	          <strong>Administración de roles y permisos:</strong> Controla las acciones permitidas para cada tipo de usuario según su perfil.
+	        </li>
+	        <li>
+	          <strong>Estadísticas y reportes:</strong> Accede a información clave sobre cursos, usuarios y el estado general del sistema.
+	        </li>
+	      </ul>
+	    </div>
+
+	    <div class="seccion">
+	      <h2 class="subtitulo">Ejemplos de tareas que puedes realizar</h2>
+	      <ul class="lista">
+	        <li>Registrar nuevos Coordinadores Académicos.</li>
+	        <li>Asignar permisos para la gestión de pensums y materias.</li>
+	        <li>Atender y validar solicitudes de modificación de datos de usuarios.</li>
+	      </ul>
+	    </div>
+
+	    <div class="button_container">
+		<br>
+		<a href="/admin" class="boton">Gestionar Usuarios</a>
+		<br>
+		<a href="/perms" class="boton">Gestionar Permisos</a>
+	    </div>
+	  </div>
+	</main>
+	
+	<!-- Footer -->
+	<div th:replace="fragments/footer :: footer"></div>
+
+	<!-- Scripts -->
+	<script th:src="@{/js/useLogout.js}"></script>
+</body>
+</html>
