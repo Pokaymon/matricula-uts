@@ -32,6 +32,14 @@ public class MateriaService {
         return materiaRepository.findById(id);
     }
 
+    public void limpiarMateriasDeProfesor(String cedulaProfesor) {
+        List<Materia> materias = materiaRepository.findByProfesorId(cedulaProfesor);
+        for (Materia materia : materias) {
+            materia.setProfesorId(null);
+            materiaRepository.save(materia);
+        }
+    }
+
     private void validarProfesorPorCedula(String cedula) {
 	if (cedula == null || cedula.isEmpty()) {
 	    throw new RuntimeException("Debe especificar la cédula del profesor.");
