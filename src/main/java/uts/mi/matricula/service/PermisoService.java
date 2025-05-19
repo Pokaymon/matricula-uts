@@ -22,6 +22,12 @@ public class PermisoService {
         return permisoRepository.findById(id);
     }
 
+    public boolean isPermisoActivo(String codigo) {
+	return permisoRepository.findByCodigo(codigo)
+		.map(Permiso::isEstado)
+		.orElse(false);
+    }
+
     public Permiso crear(Permiso permiso) throws IllegalArgumentException {
         if (permisoRepository.existsByCodigo(permiso.getCodigo())) {
             throw new IllegalArgumentException("Ya existe un permiso con ese código.");

@@ -5,12 +5,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.Cookie;
+import uts.mi.matricula.service.PermisoService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.Set;
 
 @Component
 public class RoleInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private PermisoService permisoService;
 
     private static final String TOKEN_COOKIE_NAME = "token";
 
@@ -21,11 +26,18 @@ public class RoleInterceptor implements HandlerInterceptor {
         Map.entry("/teacher", "PROFESOR"),
         Map.entry("/audit", "AUDITOR"),
         Map.entry("/materias", "COORDINADOR"),
-        Map.entry("/materias/*", "COORDINADOR"), /* */
+        Map.entry("/materias/", "COORDINADOR"),
         Map.entry("/pensums", "COORDINADOR"),
         Map.entry("/perms", "ADMIN"),
         Map.entry("/info/admin", "ADMIN"),
         Map.entry("/info/coordinator", "COORDINADOR")
+    );
+
+    // Permisos requeridos por ruta
+    private static final Map<String, String> permisoRoutes = Map.ofEntries(
+        Map.entry("/materias", "GESTION_MATERIAS"),
+        Map.entry("/materias/", "GESTION_MATERIAS"),
+        Map.entry("/pensums", "GESTION_PENSUMS")
     );
 
     @Override
@@ -56,6 +68,17 @@ public class RoleInterceptor implements HandlerInterceptor {
             }
         }
 
+        for (Map.Entry<String, String> entry : permisoRoutes.entrySet()) {
+            if (uri.startsWith(entry.getKey())) {
+                String permisoCodigo = entry.getValue();
+                boolean permitido = permisoService.isPermisoActivo(permisoCodigo);
+                if (!permitido) {
+                    response.sendRedirect("/unauthorized");
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -76,4 +99,3 @@ public class RoleInterceptor implements HandlerInterceptor {
         return null;
     }
 }
-
