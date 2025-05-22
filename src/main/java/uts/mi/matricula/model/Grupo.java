@@ -13,13 +13,16 @@ public class Grupo {
     private String codMateria;
     private List<Horario> horarios;
 
+    private String profesorId;
+
     public Grupo() {
     }
 
-    public Grupo(String codigo, String codMateria, List<Horario> horarios) {
+    public Grupo(String codigo, String codMateria, List<Horario> horarios, String profesorId) {
         this.codigo = codigo;
         this.codMateria = codMateria;
         this.horarios = horarios;
+	this.profesorId = profesorId;
     }
 
     public String getId() { return id; }
@@ -35,5 +38,9 @@ public class Grupo {
     public List<Horario> getHorarios() { return horarios; }
 
     public void setHorarios(List<Horario> horarios) { this.horarios = horarios; }
+
+    public String getProfesorId() { return profesorId; }
+
+    public void setProfesorId(String profesorId) { this.profesorId = profesorId; }
 }
 

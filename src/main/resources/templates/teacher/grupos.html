@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Coordinator Pensums Page | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/grupos.css}">
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar_user :: navbar"></div>
+
+  <section>
+    <main class="groups_container">
+
+      <h1 class="welcome_title">Gestionar Grupos</h1>
+
+      <div class="buttons_container">
+	<button class="create_group">Crear Grupo</button>
+	<a href="/info/profesor" class="create_group">Volver</a>
+      </div>
+
+      <div class="groups">
+	<h3>Codigo Grupo</h3>
+	<h3>Nombre Materia</h3>
+      </div>
+
+    </main>
+  </section>
+
+</body>
+</html>
