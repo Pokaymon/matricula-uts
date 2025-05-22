@@ -33,5 +33,40 @@
   <!-- Script Para hacer Fetchs -->
   <script th:src="@{/js/grupos.js}"></script>
 
+<!-- Modal -->
+<div id="grupo-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="close-modal">&times;</button>
+    <div class="modal-panels">
+      <div class="calendar-panel">
+        <h3>Días de clase</h3>
+        <div class="calendar-grid">
+          <div class="day" data-day="MONDAY">Lunes</div>
+          <div class="day" data-day="TUESDAY">Martes</div>
+          <div class="day" data-day="WEDNESDAY">Miércoles</div>
+          <div class="day" data-day="THURSDAY">Jueves</div>
+          <div class="day" data-day="FRIDAY">Viernes</div>
+          <div class="day" data-day="SATURDAY">Sábado</div>
+        </div>
+      </div>
+      <div class="hours-panel">
+        <h3>Rangos de clases</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Hora Inicio</th>
+              <th>Hora Fin</th>
+            </tr>
+          </thead>
+          <tbody id="horario-table-body">
+            <!-- Se llenará dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
