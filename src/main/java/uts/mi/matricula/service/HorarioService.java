@@ -5,16 +5,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uts.mi.matricula.model.Horario;
+import uts.mi.matricula.model.Grupo;
 import uts.mi.matricula.repository.HorarioRepository;
+import uts.mi.matricula.repository.GrupoRepository;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HorarioService {
 
     @Autowired
     private HorarioRepository horarioRepository;
+
+    @Autowired
+    private GrupoRepository grupoRepository;
 
     public Horario crearHorario(Horario horario) {
         if (horarioRepository.findByCodigo(horario.getCodigo()).isPresent()) {
@@ -69,7 +75,20 @@ public class HorarioService {
     }
 
     public void eliminarHorario(String id) {
-        horarioRepository.deleteById(id);
+        Optional<Horario> optionalHorario = horarioRepository.findById(id);
+	if (optionalHorario.isEmpty()) return;
+
+	Horario horario = optionalHorario.get();
+
+	// Eliminar Horario
+	horarioRepository.deleteById(id);
+
+	// Eliminar Grupo asociado
+	Grupo grupo = grupoRepository.findByCodigo(horario.getCodGrupo()).orElse(null);
+	if (grupo != null) {
+	    grupo.getHorarios().removeIf(h -> h.getCodigo().equals(horario.getCodigo()));
+	    grupoRepository.save(grupo);
+	}
     }
 }
 

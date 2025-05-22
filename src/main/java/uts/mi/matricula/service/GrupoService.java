@@ -41,11 +41,11 @@ public class GrupoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No existe la materia con código: " + grupo.getCodMateria());
         }
 
-        // Validar y guardar horarios
+        // Validar y guardar horarios primero
         List<Horario> horariosValidados = new ArrayList<>();
         for (Horario h : grupo.getHorarios()) {
             h.setCodGrupo(grupo.getCodigo());
-            horariosValidados.add(validarYGuardarHorario(h));
+            horariosValidados.add(horarioService.crearHorario(h));
         }
 
         grupo.setHorarios(horariosValidados);
@@ -66,7 +66,19 @@ public class GrupoService {
     }
 
     public void eliminarGrupo(String id) {
-        grupoRepository.deleteById(id);
+        Optional<Grupo> grupoOpt = grupoRepository.findById(id);
+	if (grupoOpt.isEmpty()) return;
+
+	Grupo grupo = grupoOpt.get();
+
+	// Eliminar todos los horarios asociados al grupo
+	List<Horario> horariosDelGrupo = horarioRepository.findByCodGrupo(grupo.getCodigo());
+	for (Horario horario : horariosDelGrupo) {
+	    horarioRepository.deleteById(horario.getId());
+	}
+
+	// Eliminar el grupo
+	grupoRepository.deleteById(id);
     }
 }
 
