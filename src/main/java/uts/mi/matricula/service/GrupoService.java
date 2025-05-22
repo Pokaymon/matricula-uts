@@ -92,6 +92,43 @@ public class GrupoService {
         return grupoRepository.findAll();
     }
 
+    public Grupo obtenerPorId(String id) {
+        return grupoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grupo no encontrado con ID: " + id));
+    }
+
+    public Grupo actualizarGrupo(String id, Grupo grupoActualizado) {
+        Grupo grupoExistente = grupoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grupo no encontrado con ID: " + id));
+
+        Optional<Materia> materia = materiaRepository.findByCodigo(grupoActualizado.getCodMateria());
+        if (materia.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No existe la materia con código: " + grupoActualizado.getCodMateria());
+        }
+
+        if (!grupoExistente.getCodigo().equals(grupoActualizado.getCodigo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede cambiar el código del grupo.");
+        }
+
+        validarProfesorPorCedula(grupoActualizado.getProfesorId());
+
+        // Eliminar horarios antiguos
+        List<Horario> antiguos = horarioRepository.findByCodGrupo(grupoExistente.getCodigo());
+        antiguos.forEach(h -> horarioRepository.deleteById(h.getId()));
+
+        List<Horario> nuevosHorarios = new ArrayList<>();
+        for (Horario h : grupoActualizado.getHorarios()) {
+            h.setCodGrupo(grupoActualizado.getCodigo());
+            nuevosHorarios.add(validarYGuardarHorario(h, grupoActualizado));
+        }
+
+        grupoExistente.setCodMateria(grupoActualizado.getCodMateria());
+        grupoExistente.setProfesorId(grupoActualizado.getProfesorId());
+        grupoExistente.setHorarios(nuevosHorarios);
+
+        return grupoRepository.save(grupoExistente);
+    }
+
     public void eliminarGrupo(String id) {
         Optional<Grupo> grupoOpt = grupoRepository.findById(id);
 	if (grupoOpt.isEmpty()) return;

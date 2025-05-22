@@ -45,6 +45,18 @@ public class GrupoController {
 	}).collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Grupo> obtenerPorId(@PathVariable String id) {
+        Grupo grupo = grupoService.obtenerPorId(id);
+        return ResponseEntity.ok(grupo);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Grupo> actualizar(@PathVariable String id, @RequestBody Grupo grupo) {
+        Grupo actualizado = grupoService.actualizarGrupo(id, grupo);
+        return ResponseEntity.ok(actualizado);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         grupoService.eliminarGrupo(id);
