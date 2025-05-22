@@ -38,9 +38,23 @@ body {
 }
 .groups {
   max-width: 500px;
-  display: flex;
-  justify-content: space-between;
   margin: auto;
   padding: 2rem;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.group_item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+.group_item:hover {
+  cursor: pointer;
+  background-color: #e0e0ff;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
