@@ -73,52 +73,107 @@ body {
   align-items: center;
   z-index: 1000;
 }
+
 .modal.hidden {
   display: none;
 }
+
 .modal-content {
-  background: white;
-  padding: 20px;
-  width: 90%;
-  max-width: 800px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1000px;
+  border-radius: 12px;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border: 3px solid #007a69;
 }
+
 .close-modal {
   position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
   background: none;
   border: none;
   cursor: pointer;
+  color: #00594d;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
+.close-modal:hover {
+  color: #007a69;
+}
+
 .modal-panels {
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
 }
+
 .calendar-panel,
 .hours-panel {
   flex: 1;
   min-width: 300px;
+  background-color: #f2f2f2;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 5px solid #007a69;
 }
+
+.calendar-panel h3,
+.hours-panel h3 {
+  color: #00594d;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #007a69;
+  padding-bottom: 0.5rem;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
+
 .day {
-  padding: 10px;
-  background: #f1f1f1;
+  padding: 12px;
+  background: #b8e6dd;
   text-align: center;
-  border-radius: 5px;
-}
-.day.active {
-  background-color: #007BFF;
-  color: white;
+  border-radius: 6px;
   font-weight: bold;
+  color: #003c33;
+  transition: background-color 0.3s ease;
+}
+
+.day.active {
+  background-color: #007a69;
+  color: white;
+}
+
+.hours-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hours-panel thead {
+  background-color: #007a69;
+  color: white;
+}
+
+.hours-panel th,
+.hours-panel td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.hours-panel tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.hours-panel tbody tr:nth-child(even) {
+  background-color: #ffffff;
 }

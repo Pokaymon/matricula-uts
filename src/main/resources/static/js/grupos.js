@@ -30,10 +30,21 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error cargando grupos:", err);
     });
 
-  // Cerrar modal
+  const modal = document.getElementById("grupo-modal");
+  const modalContent = document.querySelector(".modal-content");
+
+  // Cerrar modal al hacer clic en el botón de cerrar
   document.querySelector(".close-modal").addEventListener("click", () => {
-    document.getElementById("grupo-modal").classList.add("hidden");
+    modal.classList.add("hidden");
     limpiarModal();
+  });
+
+  // Cerrar modal al hacer clic fuera del contenido
+  modal.addEventListener("click", (e) => {
+    if (!modalContent.contains(e.target)) {
+      modal.classList.add("hidden");
+      limpiarModal();
+    }
   });
 });
 
