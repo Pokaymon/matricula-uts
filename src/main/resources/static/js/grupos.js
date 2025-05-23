@@ -121,7 +121,15 @@ function crearGrupo(e) {
 
 function agregarHorario() {
   const container = document.getElementById("horarios-container");
-  const index = container.children.length;
+  const totalHorarios = container.children.length;
+
+  if (totalHorarios >= 2) {
+    document.getElementById("agregar-horario").disabled = true;
+    alert("Solo puedes agregar hasta dos horarios")
+    return;
+  }
+
+  const index = totalHorarios;
 
   container.insertAdjacentHTML("beforeend", `
     <div class="horario-item" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
@@ -142,11 +150,13 @@ function agregarHorario() {
   `);
 }
 
+
 // Utilidades
 function limpiarModal() {
   document.querySelectorAll(".day").forEach(d => d.classList.remove("active"));
   document.getElementById("horario-table-body").innerHTML = "";
   document.getElementById("horarios-container").innerHTML = "";
+  document.getElementById("agregar-horario").disabled = false;
 }
 
 function mostrarModal(modal) {
