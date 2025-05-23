@@ -52,7 +52,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.querySelector(".create_group").addEventListener("click", () => {
   limpiarModal();
-  document.getElementById("grupo-modal").classList.remove("hidden");
+  document.getElementById("crear-grupo-modal").classList.remove("hidden");
+});
+
+const crearModal = document.getElementById("crear-grupo-modal");
+const crearModalContent = crearModal.querySelector(".modal-content");
+
+crearModal.addEventListener("click", (e) => {
+  if (!crearModalContent.contains(e.target)) {
+    crearModal.classList.add("hidden");
+    limpiarModal();
+  }
 });
 
 document.getElementById("agregar-horario").addEventListener("click", () => {
