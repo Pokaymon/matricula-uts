@@ -33,7 +33,7 @@
   <!-- Script Para hacer Fetchs -->
   <script th:src="@{/js/grupos.js}"></script>
 
-<!-- Modal -->
+<!-- Modal Mapear Horario -->
 <div id="grupo-modal" class="modal hidden">
   <div class="modal-content">
     <button class="close-modal">&times;</button>
@@ -65,6 +65,28 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal Crear Grupo -->
+<div id="grupo-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="close-modal">&times;</button>
+
+    <h2>Crear Grupo</h2>
+
+    <form id="form-crear-grupo">
+      <label>Código del grupo: <input type="text" name="codigo" required></label><br>
+      <label>Código de materia: <input type="text" name="codMateria" required></label><br>
+      <label>ID del profesor: <input type="text" name="profesorId" required></label><br><br>
+
+      <h3>Horarios</h3>
+      <div id="horarios-container"></div>
+
+      <button type="button" id="agregar-horario">Agregar Horario</button><br><br>
+
+      <button type="submit">Guardar Grupo</button>
+    </form>
   </div>
 </div>
 
