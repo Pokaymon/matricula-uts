@@ -51,12 +51,31 @@ body {
   padding: 10px;
   border-radius: 8px;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  padding-right: 40px;
 }
 .group_item:hover {
   cursor: pointer;
   background-color: #e0e0ff;
   transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.delete-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  color: #d9534f;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.group_item:hover .delete-icon {
+  display: inline;
+}
+.delete-icon:hover {
+  transform: translateY(-50%) scale(1.2);
 }
 
 /* Modal CSS */

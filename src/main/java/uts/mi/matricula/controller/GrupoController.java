@@ -41,7 +41,7 @@ public class GrupoController {
 	    String nombreMateria = materiaRepository.findByCodigo(grupo.getCodMateria())
 		.map(Materia::getNombre)
 		.orElse("Materia no encontrada");
-	    return new GrupoDTO(grupo.getCodigo(), nombreMateria);
+	    return new GrupoDTO(grupo.getId(), grupo.getCodigo(), nombreMateria);
 	}).collect(Collectors.toList());
     }
 

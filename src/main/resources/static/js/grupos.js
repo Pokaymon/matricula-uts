@@ -49,15 +49,67 @@ function cargarGrupos() {
 function crearElementoGrupo(grupo) {
   const div = document.createElement("div");
   div.className = "group_item";
+
   Object.assign(div.style, {
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-    cursor: "pointer"
+    cursor: "pointer",
+    position: "relative"
   });
-  div.innerHTML = `<p>${grupo.codigo}</p><p>${grupo.nombreMateria}</p>`;
-  div.addEventListener("click", () => abrirModalConDetalles(grupo.codigo));
+
+  div.innerHTML = `
+	<p>${grupo.codigo}</p>
+	<p>${grupo.nombreMateria}</p>
+	<span class="delete-icon" title="Eliminar grupo">&#128465;</span> <!-- Unicode basurero -->
+	`;
+
+  div.addEventListener("click", e => {
+    if (!e.target.classList.contains("delete-icon")) {
+      abrirModalConDetalles(grupo.codigo);
+    }
+  });
+
+  const deleteIcon = div.querySelector(".delete-icon");
+  deleteIcon.addEventListener("click", e => {
+    e.stopPropagation(); // evita que dispare abrirModalConDetalles
+    confirmarYEliminarGrupo(grupo.id, div);
+  });
+
   return div;
+}
+
+// DELETE
+
+function confirmarYEliminarGrupo(idGrupo, elemento) {
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "¡Esta acción no se puede deshacer!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`/api/grupos/${idGrupo}`, {
+        method: "DELETE"
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Error al eliminar grupo");
+
+        // Elimina visualmente
+        elemento.remove();
+        Swal.fire('¡Eliminado!', 'El grupo ha sido eliminado.', 'success');
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire('Error', 'Hubo un problema al eliminar el grupo.', 'error');
+      });
+    }
+  });
 }
 
 function abrirModalConDetalles(codigoGrupo) {
@@ -198,4 +250,3 @@ function traducirDia(diaIngles) {
   };
   return mapa[diaIngles] || diaIngles;
 }
-
