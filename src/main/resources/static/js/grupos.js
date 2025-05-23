@@ -61,7 +61,14 @@ function crearElementoGrupo(grupo) {
   div.innerHTML = `
 	<p>${grupo.codigo}</p>
 	<p>${grupo.nombreMateria}</p>
-	<span class="delete-icon" title="Eliminar grupo">&#128465;</span> <!-- Unicode basurero -->
+	<div class="group-actions">
+	  <span class="edit-icon" title="Editar grupo">
+	    <i class="fas fa-cog"></i>
+	  </span>
+	  <span class="delete-icon" title="Eliminar grupo">
+	    <i class="fas fa-trash-alt"></i>
+	  </span>
+	</div>
 	`;
 
   div.addEventListener("click", e => {
@@ -74,6 +81,13 @@ function crearElementoGrupo(grupo) {
   deleteIcon.addEventListener("click", e => {
     e.stopPropagation(); // evita que dispare abrirModalConDetalles
     confirmarYEliminarGrupo(grupo.id, div);
+  });
+
+  const editIcon = div.querySelector(".edit-icon");
+  editIcon.addEventListener("click", e => {
+    e.stopPropagation();
+    // Lógica para editar el grupo
+    console.log("Editar grupo:", grupo.id);
   });
 
   return div;
