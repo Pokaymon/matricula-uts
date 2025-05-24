@@ -3,12 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarGrupos();
 });
 
+let grupoEnEdicion = null;
+
 function inicializarEventos() {
-  // Modal crear grupo
   const modalCrearGrupo = document.getElementById("crear-grupo-modal");
   const modalCrearContent = modalCrearGrupo.querySelector(".modal-content");
 
   document.querySelector(".create_group").addEventListener("click", () => {
+    grupoEnEdicion = null;
     limpiarModal();
     mostrarModal(modalCrearGrupo);
   });
@@ -17,7 +19,6 @@ function inicializarEventos() {
     if (!modalCrearContent.contains(e.target)) ocultarModal(modalCrearGrupo);
   });
 
-  // Modal ver horarios
   const modalVer = document.getElementById("grupo-modal");
   const modalVerContent = modalVer.querySelector(".modal-content");
 
@@ -29,11 +30,8 @@ function inicializarEventos() {
     if (!modalVerContent.contains(e.target)) ocultarModal(modalVer);
   });
 
-  // Botón agregar horario
   document.getElementById("agregar-horario").addEventListener("click", agregarHorario);
-
-  // Formulario crear grupo
-  document.getElementById("form-crear-grupo").addEventListener("submit", crearGrupo);
+  document.getElementById("form-crear-grupo").addEventListener("submit", crearOActualizarGrupo);
 }
 
 function cargarGrupos() {
@@ -72,31 +70,52 @@ function crearElementoGrupo(grupo) {
 	`;
 
   div.addEventListener("click", e => {
-    if (!e.target.classList.contains("delete-icon")) {
+    if (!e.target.classList.contains("delete-icon") && !e.target.closest(".edit-icon")) {
       abrirModalConDetalles(grupo.codigo);
     }
   });
 
   const deleteIcon = div.querySelector(".delete-icon");
   deleteIcon.addEventListener("click", e => {
-    e.stopPropagation(); // evita que dispare abrirModalConDetalles
+    e.stopPropagation();
     confirmarYEliminarGrupo(grupo.id, div);
   });
 
   const editIcon = div.querySelector(".edit-icon");
   editIcon.addEventListener("click", e => {
     e.stopPropagation();
-    // Lógica para editar el grupo
-    console.log("Editar grupo:", grupo.id);
-  });
+
+  fetch(`/api/grupos/${grupo.id}`)
+    .then(res => res.json())
+    .then(data => {
+      grupoEnEdicion = data;
+      limpiarModal();
+
+      document.querySelector("#form-crear-grupo [name='codigo']").value = data.codigo;
+      document.querySelector("#form-crear-grupo [name='codMateria']").value = data.codMateria;
+      document.querySelector("#form-crear-grupo [name='profesorId']").value = data.profesorId;
+
+      data.horarios.forEach((horario, idx) => {
+        agregarHorario();
+        const item = document.querySelectorAll(".horario-item")[idx];
+        item.querySelector(`[name="horarios[${idx}].codigo"]`).value = horario.codigo;
+        item.querySelector(`[name="horarios[${idx}].dia"]`).value = horario.dia;
+        item.querySelector(`[name="horarios[${idx}].horaInicio"]`).value = horario.horaInicio.slice(0, 5);
+        item.querySelector(`[name="horarios[${idx}].horaFin"]`).value = horario.horaFin.slice(0, 5);
+      });
+
+      mostrarModal(document.getElementById("crear-grupo-modal"));
+    })
+    .catch(err => {
+      console.error("Error al obtener grupo completo:", err);
+      alert("No se pudo cargar la información del grupo.");
+    });
+});
 
   return div;
 }
 
-// DELETE
-
 function confirmarYEliminarGrupo(idGrupo, elemento) {
-
   Swal.fire({
     title: '¿Estás seguro?',
     text: "¡Esta acción no se puede deshacer!",
@@ -113,8 +132,6 @@ function confirmarYEliminarGrupo(idGrupo, elemento) {
       })
       .then(res => {
         if (!res.ok) throw new Error("Error al eliminar grupo");
-
-        // Elimina visualmente
         elemento.remove();
         Swal.fire('¡Eliminado!', 'El grupo ha sido eliminado.', 'success');
       })
@@ -132,19 +149,17 @@ function abrirModalConDetalles(codigoGrupo) {
     .then(grupos => {
       const grupo = grupos.find(g => g.codigo === codigoGrupo);
       if (!grupo) return;
-
       limpiarModal();
       grupo.horarios.forEach(horario => {
         marcarDia(horario.dia);
         agregarFilaHorario(horario);
       });
-
       mostrarModal(document.getElementById("grupo-modal"));
     })
     .catch(err => console.error("Error obteniendo detalles del grupo:", err));
 }
 
-function crearGrupo(e) {
+function crearOActualizarGrupo(e) {
   e.preventDefault();
 
   const formData = new FormData(e.target);
@@ -166,22 +181,25 @@ function crearGrupo(e) {
     });
   });
 
-  fetch("/api/grupos", {
-    method: "POST",
+  const metodo = grupoEnEdicion ? "PUT" : "POST";
+  const url = grupoEnEdicion ? `/api/grupos/${grupoEnEdicion.id}` : "/api/grupos";
+
+  fetch(url, {
+    method: metodo,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(grupo)
   })
     .then(res => {
-      if (!res.ok) throw new Error("Error al crear grupo");
+      if (!res.ok) throw new Error("Error al guardar grupo");
       return res.json();
     })
     .then(() => {
-      alert("Grupo creado con éxito");
+      alert("Grupo guardado con éxito");
       location.reload();
     })
     .catch(err => {
       console.error(err);
-      alert("Error al crear grupo");
+      alert("Error al guardar grupo");
     });
 }
 
@@ -216,13 +234,12 @@ function agregarHorario() {
   `);
 }
 
-
-// Utilidades
 function limpiarModal() {
   document.querySelectorAll(".day").forEach(d => d.classList.remove("active"));
   document.getElementById("horario-table-body").innerHTML = "";
   document.getElementById("horarios-container").innerHTML = "";
   document.getElementById("agregar-horario").disabled = false;
+  document.getElementById("form-crear-grupo").reset();
 }
 
 function mostrarModal(modal) {
@@ -264,3 +281,4 @@ function traducirDia(diaIngles) {
   };
   return mapa[diaIngles] || diaIngles;
 }
+
