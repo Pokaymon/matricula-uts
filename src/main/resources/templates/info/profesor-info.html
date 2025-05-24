@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido Profesor</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+</head>
+<body class="fondo">
+	
+	<!-- Navbar -->
+	<div th:replace="fragments/navbar_user :: navbar"></div>
+	
+	<main>
+	  <div class="card card-admin">
+	    <h1 class="titulo">¡Bienvenido, Profesor!</h1>
+	    <p class="mensaje">
+	      Desde aquí puedes gestionar tus materias, horarios y estudiantes asignados.
+	    </p>
+	    <div class="seccion">
+	      <h2 class="subtitulo">Funcionalidades CRUD</h2>
+	      <ul class="lista">
+	        <li>
+	          <strong>Leer Materias y Horarios:</strong> Tienes acceso a la lista de materias asignadas y los horarios establecidos para esas materias.
+	        </li>
+	        <li>
+	          <strong>Crear/Leer/Actualizar/Eliminar Horarios:</strong> Puedes agregar, modificar o eliminar horarios para las materias que te han sido asignadas.
+	        </li>
+	        <li>
+	          <strong>Ver y Gestionar Estudiantes:</strong> Puedes ver a los estudiantes inscritos en tus materias y gestionar sus actividades dentro de la materia.
+	        </li>
+	      </ul>
+	    </div>
+
+	    <div class="seccion">
+	      <h2 class="subtitulo">Ejemplo de Tareas que puedes realizar</h2>
+	      <ul class="lista">
+	        <li>Crear Grupos con respectivos horarios</li>
+	        <li>Ver los estudiantes inscritos y gestionar su rendimiento en la materia.</li>
+	      </ul>
+	    </div>
+
+	    <div class="button_container">
+		<br>
+		<a href="/grupos" class="boton">Gestionar Grupos</a> 
+		
+	  </div>
+	</main>
+	
+	<!-- Footer -->
+	<div th:replace="fragments/footer :: footer"></div>
+
+	<!-- Scripts -->
+	<script th:src="@{/js/useLogout.js}"></script>
+</body>
+</html>

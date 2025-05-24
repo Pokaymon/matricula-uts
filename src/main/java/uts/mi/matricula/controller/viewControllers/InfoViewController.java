@@ -17,4 +17,9 @@ public class InfoViewController {
     return "info/coordinador-info";
   }
 
+  @GetMapping("/teacher")
+  public String teacherInfo(){
+    return "info/profesor-info";
+  }
+
 }
