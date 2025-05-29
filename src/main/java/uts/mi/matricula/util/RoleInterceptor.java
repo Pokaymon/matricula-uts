@@ -21,23 +21,22 @@ public class RoleInterceptor implements HandlerInterceptor {
 
     private static final Map<String, String> roleRoutes = Map.ofEntries(
         Map.entry("/admin", "ADMIN"),
-        Map.entry("/student", "ESTUDIANTE"),
-        Map.entry("/coordinator", "COORDINADOR"),
-        Map.entry("/teacher", "PROFESOR"),
-        Map.entry("/audit", "AUDITOR"),
         Map.entry("/materias", "COORDINADOR"),
         Map.entry("/materias/", "COORDINADOR"),
         Map.entry("/pensums", "COORDINADOR"),
         Map.entry("/perms", "ADMIN"),
+	Map.entry("/grupos", "PROFESOR"),
         Map.entry("/info/admin", "ADMIN"),
-        Map.entry("/info/coordinator", "COORDINADOR")
+        Map.entry("/info/coordinator", "COORDINADOR"),
+	Map.entry("/info/teacher", "PROFESOR")
     );
 
     // Permisos requeridos por ruta
     private static final Map<String, String> permisoRoutes = Map.ofEntries(
         Map.entry("/materias", "GESTION_MATERIAS"),
         Map.entry("/materias/", "GESTION_MATERIAS"),
-        Map.entry("/pensums", "GESTION_PENSUMS")
+        Map.entry("/pensums", "GESTION_PENSUMS"),
+	Map.entry("/grupos", "GESTION_GRUPOS")
     );
 
     @Override

@@ -33,9 +33,6 @@
     </main>
   </section>
 
-  <!-- Script Para hacer Fetchs -->
-  <script th:src="@{/js/grupos.js}"></script>
-
 <!-- Modal Mapear Horario -->
 <div id="grupo-modal" class="modal hidden">
   <div class="modal-content">
@@ -73,7 +70,7 @@
 
 <!-- Modal Gestionar Grupo -->
 <div id="crear-grupo-modal" class="modal hidden">
-  <div class="modal-content">
+  <div id="modal-crear-content" class="modal-content">
     <button class="close-modal">&times;</button>
 
     <h2>Grupo</h2>
@@ -95,6 +92,12 @@
 
   <!-- SweetAler -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Script Para hacer Fetchs -->
+  <script th:src="@{/js/grupos.js}"></script>
+
+  <!-- Logout -->
+  <script th:src="@{/js/useLogout.js}"></script>
 
 </body>
 </html>

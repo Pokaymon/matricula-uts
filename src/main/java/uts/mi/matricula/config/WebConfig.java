@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 		"/admin", "/student", "/coordinator", "/teacher", "/audit", "/pensums",
 		"/materias", "/materias/nueva", "/materias/editar/*", /* */
-		"/perms", "/info/*" /* */
+		"/perms", "/grupos", "/info/*" /* */
 
 		);
     }
