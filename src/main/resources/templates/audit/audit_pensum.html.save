@@ -20,9 +20,11 @@
   <section>
     <main class="pensum_container">
 
-      <h1 class="welcome_title">Aqui puedes revisar los Pensums</h1>
+      <h1 class="welcome_title">Gestionar Grupos</h1>
 
-      <div class="pensums">
+      <div class="bu
+
+      <div class="groups">
       </div>
 
     </main>
@@ -30,9 +32,6 @@
 
   <!-- SweetAler -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Script Para hacer Fetchs -->
-  <script th:src="@{/js/audit_pensums.js}"></script>
 
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>

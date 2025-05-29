@@ -46,11 +46,6 @@ public class WebController {
     return "teacher";
   }
 
-  @GetMapping("/audit")
-  public String audit(){
-    return "audit";
-  }
-
   @GetMapping("/unauthorized")
   public String unauthorized(){
     return "unauthorized";
