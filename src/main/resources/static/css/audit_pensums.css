@@ -5,7 +5,7 @@ body {
   margin: 0;
   padding: 0;
 }
-.pensums_container {
+.pensum_container {
   max-width: 1200px;
   margin: auto;
   padding-bottom:20px;
@@ -17,4 +17,58 @@ body {
   color: #00594d;
   margin-bottom: 2rem;
   font-weight: bold;
+}
+.pemsums {
+  max-width: 500px;
+  margin: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pensum_item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  padding-right: 100px;
+}
+.pensum_item:hover {
+  cursor: pointer;
+  background-color: #e0e0ff;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.group-actions {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.group_item:hover .group-actions {
+  display: flex;
+}
+.informe-icon {
+  display: none;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 20%;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s ease;
+  color:white;
+  background-color: #0275d8;
+}
+.group_item:hover .informe-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.informe-icon:hover {
+  transform: scale(1.2);
+  background-color: #025aa5;
 }
