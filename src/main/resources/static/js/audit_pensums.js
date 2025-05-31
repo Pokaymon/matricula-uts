@@ -7,7 +7,7 @@ const token = localStorage.getItem("token");
 function cargarPensums() {
   fetch("/api/pensums", {
       headers: {
-        "Authorization": token
+        "Authorization": `Bearer ${token}`
       }
     })
     .then(res => res.json())

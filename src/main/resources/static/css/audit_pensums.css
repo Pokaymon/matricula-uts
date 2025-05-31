@@ -18,7 +18,7 @@ body {
   margin-bottom: 2rem;
   font-weight: bold;
 }
-.pemsums {
+.pensums {
   max-width: 500px;
   margin: auto;
   padding: 2rem;
@@ -42,7 +42,7 @@ body {
   transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-.group-actions {
+.pensum-actions {
   display: flex;
   gap: 10px;
   position: absolute;
@@ -50,7 +50,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
-.group_item:hover .group-actions {
+.pensum_item:hover .pensum-actions {
   display: flex;
 }
 .informe-icon {
@@ -63,7 +63,7 @@ body {
   color:white;
   background-color: #0275d8;
 }
-.group_item:hover .informe-icon {
+.pensum_item:hover .informe-icon {
   display: flex;
   align-items: center;
   justify-content: center;
