@@ -72,3 +72,61 @@ body {
   transform: scale(1.2);
   background-color: #025aa5;
 }
+
+
+/* Modal */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 800px;
+  width: 90%;
+  position: relative;
+}
+.close-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+.materias-por-semestre {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.semestre-bloque {
+  border-left: 5px solid #00594d;
+  padding-left: 1rem;
+  background-color: #f2f9f8;
+  border-radius: 8px;
+}
+.semestre-bloque h3 {
+  margin-top: 0;
+  color: #00594d;
+}
+.semestre-bloque table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.semestre-bloque th, .semestre-bloque td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}

@@ -37,5 +37,14 @@
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>
 
+  <!-- Modal para mostrar materias por pensum -->
+  <div id="pensumModal" class="modal" style="display:none;">
+    <div class="modal-content" id="modalContent">
+      <span class="close-button" id="closeModal">&times;</span>
+      <h2>Materias del Pensum</h2>
+      <div id="materiasPorSemestre" class="materias-por-semestre"></div>
+    </div>
+  </div>
+
 </body>
 </html>
