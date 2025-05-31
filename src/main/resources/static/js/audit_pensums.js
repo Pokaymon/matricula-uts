@@ -59,7 +59,8 @@ function abrirModalConMaterias(codigoPensum) {
     const contenedor = document.getElementById("materiasPorSemestre");
     contenedor.innerHTML = "";
 
-    for (const semestre in materiasPorSemestre) {
+    for (const semestreStr of Object.keys(materiasPorSemestre)) {
+      const semestre = parseInt(semestreStr);
       const bloque = document.createElement("div");
       bloque.className = "semestre-bloque";
 
@@ -91,7 +92,11 @@ function abrirModalConMaterias(codigoPensum) {
         </table>
       `;
 
-      contenedor.appendChild(bloque);
+      // Agregar animación con delay secuencial
+      setTimeout(() => {
+	bloque.style.animationDelay = `${semestre * 0.2}s`;
+	contenedor.appendChild(bloque);
+      }, semestre * 200);
     }
 
     document.getElementById("pensumModal").style.display = "flex";
@@ -124,11 +129,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("pensumModal");
   const closeBtn = document.getElementById("closeModal");
 
-  closeBtn.addEventListener("click", () => modal.style.display = "none");
+  closeBtn.addEventListener("click", cerrarModalConAnimacion);
 
   window.addEventListener("click", e => {
     if (e.target === modal) {
-      modal.style.display = "none";
+      cerrarModalConAnimacion();
     }
   });
 });
+
+function cerrarModalConAnimacion() {
+  const modal = document.getElementById("pensumModal");
+  const content = document.getElementById("modalContent");
+
+  content.classList.add("fade-out");
+
+  content.addEventListener("animationend", () => {
+    modal.style.display = "none";
+    content.classList.remove("fade-out");
+  }, { once: true });
+}

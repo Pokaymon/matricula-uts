@@ -87,17 +87,21 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem;
 }
+
 .modal-content {
   background-color: #fff;
   padding: 2rem;
   border-radius: 12px;
   max-height: 90vh;
   overflow-y: auto;
-  max-width: 800px;
-  width: 90%;
+  max-width: 900px;
+  width: 100%;
   position: relative;
+  font-family: 'Segoe UI', sans-serif;
 }
+
 .close-button {
   position: absolute;
   right: 1rem;
@@ -106,27 +110,115 @@ body {
   cursor: pointer;
   color: #666;
 }
+
+.modal-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  color: #003d33;
+}
+
 .materias-por-semestre {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
+
 .semestre-bloque {
-  border-left: 5px solid #00594d;
-  padding-left: 1rem;
-  background-color: #f2f9f8;
+  border-left: 6px solid #00796b;
+  padding-left: 1.2rem;
+  background-color: #f0fdfa;
   border-radius: 8px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
+
 .semestre-bloque h3 {
-  margin-top: 0;
-  color: #00594d;
+  font-size: 1.4rem;
+  color: #00796b;
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
+
 .semestre-bloque table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Esto fuerza ancho uniforme */
 }
-.semestre-bloque th, .semestre-bloque td {
+
+.semestre-bloque th,
+.semestre-bloque td {
   border: 1px solid #ccc;
-  padding: 0.5rem;
+  padding: 0.6rem;
   text-align: left;
+  vertical-align: top;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Columnas con ancho fijo (ajustable si deseas otro %) */
+.semestre-bloque th:nth-child(1),
+.semestre-bloque td:nth-child(1) {
+  width: 10%;
+}
+
+.semestre-bloque th:nth-child(2),
+.semestre-bloque td:nth-child(2) {
+  width: 20%;
+}
+
+.semestre-bloque th:nth-child(3),
+.semestre-bloque td:nth-child(3) {
+  width: 10%;
+}
+
+.semestre-bloque th:nth-child(4),
+.semestre-bloque td:nth-child(4) {
+  width: 15%;
+}
+
+.semestre-bloque th:nth-child(5),
+.semestre-bloque td:nth-child(5) {
+  width: 20%;
+}
+
+.semestre-bloque th:nth-child(6),
+.semestre-bloque td:nth-child(6) {
+  width: 25%;
+}
+
+/* Animación fade-slide */
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.semestre-bloque {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Animaciones de entrada y salida */
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeOutModal {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+.modal-content {
+  animation: fadeInModal 0.3s ease-out forwards;
+}
+.modal-content.fade-out {
+  animation: fadeOutModal 0.3s ease-in forwards;
 }
