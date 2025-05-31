@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido Estudiante</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+    <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body class="fondo">
+
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar_user :: navbar"></div>
+
+    <!-- Contenedor centrado -->
+    <main>
+      <div class="card-admin">
+        <h2 class="titulo">¡Bienvenido, Estudiante!</h2>
+        <p class="mensaje">Desde aquí puedes consultar información académica, inscribirte en materias y revisar tus horarios y calificaciones.</p>
+
+        <div class="seccion">
+          <h3 class="subtitulo">¿Qué puedes hacer como Estudiante?</h3>
+          <ul class="lista">
+            <li><strong>Consulta de Pensums y Materias:</strong> Explora los pensums de tu carrera y revisa las materias disponibles.</li>
+            <li><strong>Inscripción a Grupos:</strong> Elige e inscríbete en las materias según el pensum y los horarios disponibles.</li>
+            <li><strong>Revisión de Horarios y Resultados:</strong> Consulta los horarios de clases, notas y asistencia de tus materias inscritas.</li>
+          </ul>
+        </div>
+
+        <div class="seccion">
+          <h3 class="subtitulo">Ejemplos de tareas que puedes realizar</h3>
+          <ul class="lista">
+            <li>Inscribirte en un grupo de materia disponible para el semestre.</li>
+            <li>Consultar el horario semanal de tus clases.</li>
+            <li>Revisar tus notas parciales y finales.</li>
+          </ul>
+        </div>
+    
+        <div class="button_container">
+            <br>
+            <a th:href="@{/unauthorized}" class="boton">Ver Pensums</a>
+            <br>
+            <a th:href="@{/student/materias}" class="boton">Ver Materias</a>
+            <br>
+            <a th:href="@{/unauthorized}" class="boton">Inscribirse en Grupos</a>
+            <br>
+            <a th:href="@{/unauthorized}" class="boton">Consultar Horario</a>
+            <br>
+            <a th:href="@{/student/resultados}" class="boton">Ver Resultados</a>
+        </div>	    
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/useLogout.js}"></script>
+</body>
+</html>
+

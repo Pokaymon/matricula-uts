@@ -22,4 +22,13 @@ public class InfoViewController {
     return "info/profesor-info";
   }
 
+  @GetMapping("/student")
+  public String studentInfo(){
+    return "info/student-info";
+  }
+
+  @GetMapping("/audit")
+  public String auditInfo(){
+    return "info/audit-info";
+  }
 }

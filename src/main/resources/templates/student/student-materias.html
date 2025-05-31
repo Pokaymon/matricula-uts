@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Pensums | UTS</title>
+  <title>Student Materias | UTS</title>
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
-  <link rel="stylesheet" th:href="@{/css/audit_pensums.css}">
+  <link rel="stylesheet" th:href="@{/css/grupos.css}">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,15 +18,15 @@
   <div th:replace="fragments/navbar_user :: navbar"></div>
 
   <section>
-    <main class="pensum_container">
+    <main class="groups_container">
 
-      <h1 class="welcome_title">Aqui puedes revisar los Pensums</h1>
+      <h1 class="welcome_title">Aqui puedes ver las Materias Disponibles</h1>
 
       <div class="buttons_container">
-	<a href="/info/audit" class="button">Volver</a>
+	<a href="/info/student" class="create_group">Volver</a>
       </div>
 
-      <div class="pensums">
+      <div class="groups">
       </div>
 
     </main>
@@ -36,19 +36,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Script Para hacer Fetchs -->
-  <script th:src="@{/js/audit_pensums.js}"></script>
+  <script th:src="@{/js/grupos.js}"></script>
 
   <!-- Logout -->
   <script th:src="@{/js/useLogout.js}"></script>
-
-  <!-- Modal para mostrar materias por pensum -->
-  <div id="pensumModal" class="modal" style="display:none;">
-    <div class="modal-content" id="modalContent">
-      <span class="close-button" id="closeModal">&times;</span>
-      <h2>Materias del Pensum</h2>
-      <div id="materiasPorSemestre" class="materias-por-semestre"></div>
-    </div>
-  </div>
 
 </body>
 </html>

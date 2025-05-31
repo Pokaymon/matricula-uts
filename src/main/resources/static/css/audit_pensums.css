@@ -18,6 +18,24 @@ body {
   margin-bottom: 2rem;
   font-weight: bold;
 }
+.buttons_container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+.button {
+  all: unset;
+  background-color: rgb(18, 77, 76);
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: #006d5b;
+}
 .pensums {
   max-width: 600px;
   margin: auto;

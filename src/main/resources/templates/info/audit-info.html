@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Auditor Info | UTS</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+    <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body class="fondo">
+
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar_user :: navbar"></div>
+
+    <!-- Contenedor centrado -->
+    <main>
+      <div class="card-admin">
+        <h2 class="titulo">¡Bienvenido, Auditor!</h2>
+        <p class="mensaje">Desde aquí puedes revisar, aprobar o rechazar pensums y materias, y generar reportes de evaluación.</p>
+
+        <div class="seccion">
+          <h3 class="subtitulo">¿Qué puedes hacer como Auditor?</h3>
+          <ul class="lista">
+            <li><strong>Revisión de Pensums y Materias:</strong> Accede a los pensums y materias creados por los coordinadores para verificar que cumplan con las normativas académicas.</li>
+            <li><strong>Aprobación o Rechazo:</strong> Aprueba o solicita ajustes en pensums y materias según los criterios establecidos por el sistema educativo.</li>
+            <li><strong>Generación de Reportes:</strong> Emite reportes de aprobación con observaciones o razones de rechazo.</li>
+          </ul>
+        </div>
+
+        <div class="seccion">
+          <h3 class="subtitulo">Ejemplos de tareas que puedes realizar</h3>
+          <ul class="lista">
+            <li>Revisar un pensum y validarlo según criterios institucionales.</li>
+            <li>Verificar que las materias tengan requisitos y contenidos adecuados.</li>
+            <li>Generar un reporte detallado de aprobación o rechazo.</li>
+          </ul>
+        </div>
+    
+        <div class="button_container">
+            <br>
+            <a th:href="@{/audit/pensums}" class="boton">Revisar Pensums</a>
+        </div>	    
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/useLogout.js}"></script>
+</body>
+</html>
+

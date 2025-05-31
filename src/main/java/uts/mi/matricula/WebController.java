@@ -26,24 +26,9 @@ public class WebController {
     return "permisos/permisos";
   }
 
-  @GetMapping("/student")
-  public String student(){
-    return "student";
-  }
-
-  @GetMapping("/coordinator")
-  public String coordinator(){
-    return "coordinator";
-  }
-
   @GetMapping("/pensums")
   public String coordinatorPensum(){
     return "coordinator/coordinator_pensums";
-  }
-
-  @GetMapping("/teacher")
-  public String teacher(){
-    return "teacher";
   }
 
   @GetMapping("/unauthorized")
