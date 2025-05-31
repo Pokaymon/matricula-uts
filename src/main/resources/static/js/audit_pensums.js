@@ -1,19 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
-  cargarGrupos();
+  cargarPensums();
 });
 
+const token = localStorage.getItem("token");
+
 function cargarPensums() {
-  fetch("/api/pensums")
+  fetch("/api/pensums", {
+      headers: {
+        "Authorization": token
+      }
+    })
     .then(res => res.json())
     .then(data => {
       const container = document.querySelector(".pensums");
       data.forEach(pensum => container.appendChild(CrearElementoPensum(pensum)));
-    )}
+    })
     .catch(err => console.error("Error cargando Pensums:", err));
 }
 
-function crearElementoPensum(pensum) {
-  const div = document.createPensum("div");
+function CrearElementoPensum(pensum) {
+  const div = document.createElement("div");
   div.className = "pensum_item";
 
   Object.assign(div.style, {
@@ -36,7 +42,10 @@ function crearElementoPensum(pensum) {
 
   div.addEventListener("click", e => {
     if (!e.target.classList.contains("informe-icon")) {
-      abrirModalConDetalles(pensum.codigo);
+      // abrirModalConDetalles(pensum.codigo);
+      alert("Pensum seleccionado: " + pensum.codigo);
     }
   });
+
+  return div;
 }
