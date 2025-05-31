@@ -166,3 +166,53 @@ function cerrarModalConAnimacion() {
   }, { once: true });
 }
 
+// PATCH Estado
+document.addEventListener("click", async e => {
+  const icon = e.target.closest(".informe-icon");
+  if (!icon) return;
+
+  const pensumItem = icon.closest(".pensum_item");
+  if (!pensumItem) return;
+
+  const codigo = pensumItem.querySelector("p").textContent;
+  const token = localStorage.getItem("token");
+
+  const pensums = await fetch("/api/pensums", {
+    headers: { "Authorization": `Bearer ${token}` }
+  }).then(res => res.json());
+
+  const pensum = pensums.find(p => p.codigo === codigo);
+  if (!pensum) return;
+
+  Swal.fire({
+    title: `¿Estás seguro de activar el Pensum: ${pensum.codigo}?`,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, Activar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      fetch(`/api/pensums/${pensum.id}/estado`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ activo: true })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Error al activar pensum");
+          return res.json();
+        })
+        .then(data => {
+          Swal.fire("Éxito", `Pensum ${data.codigo} activado.`, "success");
+          cargarPensums(token); // Recargar la lista actualizada
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire("Error", "No se pudo activar el pensum.", "error");
+        });
+    }
+  });
+});
+
