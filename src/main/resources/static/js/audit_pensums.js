@@ -13,7 +13,11 @@ function cargarPensums() {
     .then(res => res.json())
     .then(data => {
       const container = document.querySelector(".pensums");
-      data.forEach(pensum => container.appendChild(CrearElementoPensum(pensum)));
+      container.innerHTML = ""; // Limpia el contenedor
+
+      // Filtrar para mostrar solo los inactivos
+      data.filter(pensum => !pensum.activo)
+          .forEach(pensum => container.appendChild(CrearElementoPensum(pensum)));
     })
     .catch(err => console.error("Error cargando Pensums:", err));
 }
@@ -32,10 +36,10 @@ function CrearElementoPensum(pensum) {
 
   div.innerHTML = `
     <p>${pensum.codigo}</p>
-    <p>${pensum.activo}</p>
+    <p>${pensum.activo ? "Activo" : "Pendiente Por Activación"}</p>
     <div class="pensum-actions">
       <span class="informe-icon">
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-puzzle-piece"></i>
       </span>
     </div>
   `;

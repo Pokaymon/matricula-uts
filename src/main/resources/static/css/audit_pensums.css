@@ -61,7 +61,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s, background-color 0.3s ease;
   color:white;
-  background-color: #0275d8;
+  background-color: #008F39;
 }
 .pensum_item:hover .informe-icon {
   display: flex;
@@ -70,7 +70,7 @@ body {
 }
 .informe-icon:hover {
   transform: scale(1.2);
-  background-color: #025aa5;
+  background-color: #005F27;
 }
 
 
