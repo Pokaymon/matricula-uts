@@ -6,7 +6,8 @@ import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.service.PensumService;
 
-import java.util.List;
+import org.springframework.http.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/pensums")
@@ -39,6 +40,24 @@ public class PensumController {
     @PutMapping("/{id}")
     public Pensum actualizar(@PathVariable String id, @RequestBody Pensum pensum) {
         return pensumService.actualizarPensum(id, pensum);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Pensum> actualizarEstado(@PathVariable String id, @RequestBody Map<String, Boolean> estadoRequest) {
+        if (!estadoRequest.containsKey("activo")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean nuevoEstado = estadoRequest.get("activo");
+
+        try {
+            Pensum actualizado = pensumService.actualizarEstado(id, nuevoEstado);
+            return ResponseEntity.ok(actualizado);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -87,6 +87,22 @@ public class PensumService {
         return pensumRepository.save(actualizado);
     }
 
+    public Pensum actualizarEstado(String id, boolean nuevoEstado) {
+        Pensum existente = pensumRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
+
+        // Si se quiere activar y ya hay otro activo para la misma carrera, error
+        if (nuevoEstado) {
+            Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(existente.getCarrera());
+            if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
+                throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
+            }
+        }
+
+        existente.setActivo(nuevoEstado);
+        return pensumRepository.save(existente);
+    }
+
     public void eliminarPensum(String id) {
         pensumRepository.deleteById(id);
     }

@@ -9,7 +9,7 @@ public enum EndpointAccessRule {
     MATERIAS_GET("/api/materias", "GET", List.of("ADMIN", "COORDINADOR")),
     MATERIAS_MODIFY("/api/materias", "*", List.of("COORDINADOR")),
     PENSUMS_GET("/api/pensums", "GET", List.of("ADMIN", "COORDINADOR", "AUDITOR")),
-    PENSUMS_MODIFY("/api/pensums", "*", List.of("COORDINADOR")),
+    PENSUMS_MODIFY("/api/pensums", "*", List.of("COORDINADOR", "AUDITOR")),
     PERMISOS_ALL("/api/permisos", "*", List.of("ADMIN"));
 
     private final String pathPrefix;

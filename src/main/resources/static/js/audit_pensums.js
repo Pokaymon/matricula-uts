@@ -1,28 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-  cargarPensums();
+  const token = localStorage.getItem("token");
+
+  cargarPensums(token);
+  inicializarModal();
 });
 
-const token = localStorage.getItem("token");
-
-function cargarPensums() {
+// Cargar Pensums (solo inactivos)
+function cargarPensums(token) {
   fetch("/api/pensums", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    })
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
     .then(res => res.json())
     .then(data => {
       const container = document.querySelector(".pensums");
-      container.innerHTML = ""; // Limpia el contenedor
+      container.innerHTML = "";
 
-      // Filtrar para mostrar solo los inactivos
-      data.filter(pensum => !pensum.activo)
-          .forEach(pensum => container.appendChild(CrearElementoPensum(pensum)));
+      data
+        .filter(pensum => !pensum.activo)
+        .forEach(pensum => container.appendChild(CrearElementoPensum(pensum, token)));
     })
     .catch(err => console.error("Error cargando Pensums:", err));
 }
 
-function CrearElementoPensum(pensum) {
+// Crear el elemento visual para cada pensum
+function CrearElementoPensum(pensum, token) {
   const div = document.createElement("div");
   div.className = "pensum_item";
 
@@ -45,72 +48,82 @@ function CrearElementoPensum(pensum) {
   `;
 
   div.addEventListener("click", e => {
-    if (!e.target.classList.contains("informe-icon")) {
-      abrirModalConMaterias(pensum.codigo);
+    if (!e.target.closest(".informe-icon")) {
+      abrirModalConMaterias(pensum.codigo, token);
     }
   });
 
   return div;
 }
 
-function abrirModalConMaterias(codigoPensum) {
+// Abrir modal con las materias agrupadas
+function abrirModalConMaterias(codigoPensum, token) {
   fetch(`/api/pensums/${codigoPensum}/materias`, {
     headers: { "Authorization": `Bearer ${token}` }
   })
-  .then(res => res.json())
-  .then(data => {
-    const materiasPorSemestre = agruparMateriasPorSemestre(data);
-    const contenedor = document.getElementById("materiasPorSemestre");
-    contenedor.innerHTML = "";
-
-    for (const semestreStr of Object.keys(materiasPorSemestre)) {
-      const semestre = parseInt(semestreStr);
-      const bloque = document.createElement("div");
-      bloque.className = "semestre-bloque";
-
-      bloque.innerHTML = `
-        <h3>Semestre ${semestre}</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Créditos</th>
-              <th>Tipo</th>
-              <th>Prerrequisitos</th>
-              <th>Descripción</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${materiasPorSemestre[semestre].map(m => `
-              <tr>
-                <td>${m.codigo}</td>
-                <td>${m.nombre}</td>
-                <td>${m.creditos}</td>
-                <td>${m.tipo}</td>
-                <td>${m.prerequisitos ? m.prerequisitos.join(', ') : '-'}</td>
-                <td>${m.descripcion}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-
-      // Agregar animación con delay secuencial
-      setTimeout(() => {
-	bloque.style.animationDelay = `${semestre * 0.2}s`;
-	contenedor.appendChild(bloque);
-      }, semestre * 200);
-    }
-
-    document.getElementById("pensumModal").style.display = "flex";
-  })
-  .catch(err => {
-    console.error("Error al cargar materias del pensum", err);
-    Swal.fire("Error", "No se pudo cargar la información del pensum.", "error");
-  });
+    .then(res => res.json())
+    .then(data => {
+      const materiasPorSemestre = agruparMateriasPorSemestre(data);
+      renderizarMateriasPorSemestre(materiasPorSemestre);
+      document.getElementById("pensumModal").style.display = "flex";
+    })
+    .catch(err => {
+      console.error("Error al cargar materias del pensum", err);
+      Swal.fire("Error", "No se pudo cargar la información del pensum.", "error");
+    });
 }
 
+// Renderizar materias dentro del modal
+function renderizarMateriasPorSemestre(materiasPorSemestre) {
+  const contenedor = document.getElementById("materiasPorSemestre");
+  if (!contenedor) {
+    console.error("No se encontró el contenedor 'materiasPorSemestre'");
+    return;
+  }
+
+  contenedor.innerHTML = "";
+
+  for (const semestreStr of Object.keys(materiasPorSemestre)) {
+    const semestre = parseInt(semestreStr);
+    const bloque = document.createElement("div");
+    bloque.className = "semestre-bloque";
+
+    bloque.innerHTML = `
+      <h3>Semestre ${semestre}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Créditos</th>
+            <th>Tipo</th>
+            <th>Prerrequisitos</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${materiasPorSemestre[semestre].map(m => `
+            <tr>
+              <td>${m.codigo}</td>
+              <td>${m.nombre}</td>
+              <td>${m.creditos}</td>
+              <td>${m.tipo}</td>
+              <td>${m.prerequisitos?.join(', ') || '-'}</td>
+              <td>${m.descripcion}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    setTimeout(() => {
+      bloque.style.animationDelay = `${semestre * 0.2}s`;
+      contenedor.appendChild(bloque);
+    }, semestre * 200);
+  }
+}
+
+// Agrupar materias por semestre
 function agruparMateriasPorSemestre(materias) {
   const agrupadas = {};
   materias.forEach(m => {
@@ -119,7 +132,6 @@ function agruparMateriasPorSemestre(materias) {
     agrupadas[semestre].push(m);
   });
 
-  // Ordenar por semestre numérico ascendente
   const ordenadas = {};
   Object.keys(agrupadas).sort((a, b) => a - b).forEach(s => {
     ordenadas[s] = agrupadas[s];
@@ -128,8 +140,8 @@ function agruparMateriasPorSemestre(materias) {
   return ordenadas;
 }
 
-// Cerrar modal al hacer clic fuera o en la "x"
-document.addEventListener("DOMContentLoaded", () => {
+// Inicializa eventos del modal
+function inicializarModal() {
   const modal = document.getElementById("pensumModal");
   const closeBtn = document.getElementById("closeModal");
 
@@ -140,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cerrarModalConAnimacion();
     }
   });
-});
+}
 
 function cerrarModalConAnimacion() {
   const modal = document.getElementById("pensumModal");
@@ -153,3 +165,4 @@ function cerrarModalConAnimacion() {
     content.classList.remove("fade-out");
   }, { once: true });
 }
+
