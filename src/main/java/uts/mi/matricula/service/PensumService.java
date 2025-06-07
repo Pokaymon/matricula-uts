@@ -66,14 +66,16 @@ public List<PensumDTO> obtenerPensumsConNombreCarrera() {
         Optional<Carrera> carreraOpt = carreraRepository.findById(p.getCarrera().getId());
         if (carreraOpt.isPresent()) {
             Carrera c = carreraOpt.get();
-            PensumDTO dto = new PensumDTO();
-            dto.setId(p.getId());
-            dto.setCodigo(p.getCodigo());
-            dto.setFechaInicio(p.getFechaInicio());
-            dto.setActivo(p.isActivo());
-            dto.setIdCarrera(c.getId()); // ✅ Agregado
-            dto.setNombreCarrera(c.getNombre());
-            dto.setMaterias(obtenerMateriasDePensum(p.getCodigo()));
+            List<Materia> materias = obtenerMateriasDePensum(p.getCodigo());
+            PensumDTO dto = new PensumDTO(
+                p.getId(),
+                p.getCodigo(),
+                p.getFechaInicio(),
+                p.isActivo(),
+                c.getId(),
+                c.getNombre(),
+                materias
+            );
             dtos.add(dto);
         }
     }
