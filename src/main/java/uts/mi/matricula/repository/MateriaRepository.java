@@ -11,5 +11,4 @@ public interface MateriaRepository extends MongoRepository<Materia, String> {
     boolean existsByCodigo(String codigo);
     boolean existsByNombre(String nombre);
     Optional<Materia> findByNombre(String nombre);
-    List<Materia> findByProfesorId(String profesorId);
 }

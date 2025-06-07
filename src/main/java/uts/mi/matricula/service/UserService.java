@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uts.mi.matricula.model.User;
 import uts.mi.matricula.repository.UserRepository;
-import uts.mi.matricula.service.MateriaService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +13,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private MateriaService materiaService;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -59,22 +55,10 @@ public class UserService {
 
 	User actualizado = userRepository.save(existingUser);
 
-	if ("PROFESOR".equalsIgnoreCase(rolAnterior) && !"PROFESOR".equalsIgnoreCase(user.getRol())) {
-	    materiaService.limpiarMateriasDeProfesor(cedulaActual);
-	}
-
         return userRepository.save(existingUser);
     }
 
     public void deleteUser(String id) {
-	Optional<User> userOpt = userRepository.findById(id);
-	if (userOpt.isPresent()) {
-	    User user = userOpt.get();
-	    if ("PROFESOR".equalsIgnoreCase(user.getRol())) {
-	       materiaService.limpiarMateriasDeProfesor(user.getCedula());
-	    }
-	}
-
         userRepository.deleteById(id);
     }
 }

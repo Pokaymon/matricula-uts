@@ -29,7 +29,6 @@ public class MateriaViewController {
     @GetMapping("/nueva")
     public String crearMateriaForm(Model model) {
         model.addAttribute("materia", new Materia());  // Crear un objeto vacío para el formulario
-	model.addAttribute("profesores", userRepository.findByRolIgnoreCase("PROFESOR"));
 	model.addAttribute("materiasExistentes", materiaService.getAllMaterias());
         return "/coordinator/materias/crear-materia";  // Nombre de la vista Thymeleaf para crear materia
     }
@@ -48,7 +47,6 @@ public class MateriaViewController {
 	    .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
 
 	model.addAttribute("materia", materia);
-	model.addAttribute("profesores", userRepository.findByRolIgnoreCase("PROFESOR"));
 	model.addAttribute("materiasExistentes", materiaService.getAllMaterias());
 
         return "/coordinator/materias/editar-materia";  // Nombre de la vista Thymeleaf para editar materia

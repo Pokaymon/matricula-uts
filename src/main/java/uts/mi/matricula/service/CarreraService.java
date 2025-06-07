@@ -34,6 +34,13 @@ public class CarreraService {
             String pensumId = carrera.getPensum().getId();
             Pensum pensum = pensumRepository.findById(pensumId)
                 .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
+
+        // Validar que el pensum no esté asignado a otra carrera
+        Optional<Carrera> existente = carreraRepository.findByPensum_Id(pensumId);
+        if (existente.isPresent()) {
+            throw new Exception("El pensum ya está asignado a otra carrera");
+        }
+
             carrera.setPensum(pensum);
         }
 
@@ -68,6 +75,12 @@ public class CarreraService {
             String pensumId = carrera.getPensum().getId();
             Pensum pensum = pensumRepository.findById(pensumId)
                 .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
+
+        Optional<Carrera> otraCarreraConPensum = carreraRepository.findByPensum_Id(pensumId);
+        if (otraCarreraConPensum.isPresent() && !otraCarreraConPensum.get().getId().equals(id)) {
+            throw new Exception("El pensum ya está asignado a otra carrera");
+        }
+
             existente.setPensum(pensum);
         } else {
             existente.setPensum(null);

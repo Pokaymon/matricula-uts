@@ -19,7 +19,7 @@ public class Pensum {
 
     private boolean activo;
 
-    private List<String> materias; // Lista de códigos de materias
+    private List<String> materias;
 
     // Constructor por defecto
     public Pensum() {}

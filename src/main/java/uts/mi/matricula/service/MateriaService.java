@@ -6,8 +6,6 @@ import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.repository.MateriaRepository;
 import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.repository.PensumRepository;
-import uts.mi.matricula.model.User;
-import uts.mi.matricula.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,34 +19,12 @@ public class MateriaService {
     @Autowired
     private PensumRepository pensumRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public List<Materia> getAllMaterias() {
         return materiaRepository.findAll();
     }
 
     public Optional<Materia> getMateriaById(String id) {
         return materiaRepository.findById(id);
-    }
-
-    public void limpiarMateriasDeProfesor(String cedulaProfesor) {
-        List<Materia> materias = materiaRepository.findByProfesorId(cedulaProfesor);
-        for (Materia materia : materias) {
-            materia.setProfesorId(null);
-            materiaRepository.save(materia);
-        }
-    }
-
-    private void validarProfesorPorCedula(String cedula) {
-	if (cedula == null || cedula.isEmpty()) {
-	    throw new RuntimeException("Debe especificar la cédula del profesor.");
-	}
-	User user = userRepository.findByCedula(cedula)
-	    .orElseThrow(() -> new RuntimeException("No existe un usuario con la cédula ingresada."));
-	if (!"PROFESOR".equalsIgnoreCase(user.getRol())) {
-	     throw new RuntimeException("El usuario con la cédula ingresada no tiene rol de PROFESOR.");
-	}
     }
 
     public Materia createMateria(Materia materia) {
@@ -58,7 +34,6 @@ public class MateriaService {
 	if (materiaRepository.existsByNombre(materia.getNombre())) {
 	    throw new RuntimeException("Ya existe una materia con ese nombre.");
 	}
-	validarProfesorPorCedula(materia.getProfesorId());
 	return materiaRepository.save(materia);
     }
 
@@ -75,8 +50,6 @@ public class MateriaService {
 	      throw new RuntimeException("Ya existe otra materia con ese nombre.");
 	    }
 
-	    validarProfesorPorCedula(updatedMateria.getProfesorId());
-
             materia.setCodigo(updatedMateria.getCodigo());
             materia.setNombre(updatedMateria.getNombre());
             materia.setCreditos(updatedMateria.getCreditos());
@@ -84,7 +57,7 @@ public class MateriaService {
             materia.setTipo(updatedMateria.getTipo());
             materia.setPrerequisitos(updatedMateria.getPrerequisitos());
             materia.setDescripcion(updatedMateria.getDescripcion());
-            materia.setProfesorId(updatedMateria.getProfesorId());
+
             return materiaRepository.save(materia);
         }).orElseThrow(() -> new RuntimeException("Materia no encontrada"));
     }

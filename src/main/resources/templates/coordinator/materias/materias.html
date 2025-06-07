@@ -30,7 +30,6 @@
         <th>Créditos</th>
         <th>Semestre</th>
         <th>Tipo</th>
-        <th>Profesor</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -41,11 +40,6 @@
         <td th:text="${materia.creditos}">Créditos</td>
         <td th:text="${materia.semestre}">Semestre</td>
         <td th:text="${materia.tipo}">Tipo</td>
-        <td 
-          th:text="${materia.profesorId}" 
-          th:attr="data-cedula=${materia.profesorId}"
-          class="profesor-cedula">Profesor
-        </td>
         <td>
           <a th:href="@{'/materias/editar/' + ${materia.id}}" class="btn small">Editar</a>
 		  
