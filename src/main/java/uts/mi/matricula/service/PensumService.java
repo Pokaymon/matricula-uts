@@ -23,29 +23,21 @@ public class PensumService {
     @Autowired
     private MateriaRepository materiaRepository;
 
-    @Autowired
-    private CarreraRepository carreraRepository;
-
     public Pensum crearPensum(Pensum pensum) {
         if (pensumRepository.existsByCodigo(pensum.getCodigo())) {
             throw new IllegalArgumentException("Ya existe un pensum con ese código.");
         }
 
-        // Validar carrera existente
-        Carrera carrera = carreraRepository.findById(pensum.getCarrera().getId())
-            .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada."));
-
-        pensum.setCarrera(carrera);
-
-        // Validar materias
+        // Validar que las materias existan
         for (String codigo : pensum.getMaterias()) {
             if (!materiaRepository.existsByCodigo(codigo)) {
                 throw new IllegalArgumentException("Materia no encontrada: " + codigo);
             }
         }
 
+        // Validar que solo haya un pensum activo por carrera
         if (pensum.isActivo()) {
-            Optional<Pensum> activoExistente = pensumRepository.findByCarreraAndActivoTrue(carrera);
+            Optional<Pensum> activoExistente = pensumRepository.findByCarreraAndActivoTrue(pensum.getCarrera());
             if (activoExistente.isPresent()) {
                 throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
             }
@@ -57,31 +49,6 @@ public class PensumService {
     public List<Pensum> obtenerTodos() {
         return pensumRepository.findAll();
     }
-
-public List<PensumDTO> obtenerPensumsConNombreCarrera() {
-    List<Pensum> pensums = pensumRepository.findAll();
-    List<PensumDTO> dtos = new ArrayList<>();
-
-    for (Pensum p : pensums) {
-        Optional<Carrera> carreraOpt = carreraRepository.findById(p.getCarrera().getId());
-        if (carreraOpt.isPresent()) {
-            Carrera c = carreraOpt.get();
-            List<Materia> materias = obtenerMateriasDePensum(p.getCodigo());
-            PensumDTO dto = new PensumDTO(
-                p.getId(),
-                p.getCodigo(),
-                p.getFechaInicio(),
-                p.isActivo(),
-                c.getId(),
-                c.getNombre(),
-                materias
-            );
-            dtos.add(dto);
-        }
-    }
-
-    return dtos;
-}
 
     public Optional<Pensum> obtenerPorCodigo(String codigo) {
         return pensumRepository.findByCodigo(codigo);
@@ -101,23 +68,19 @@ public List<PensumDTO> obtenerPensumsConNombreCarrera() {
         Pensum existente = pensumRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
 
-        Carrera carrera = carreraRepository.findById(actualizado.getCarrera().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada."));
-
-        actualizado.setCarrera(carrera);
-
         if (!existente.getCodigo().equals(actualizado.getCodigo()) &&
                 pensumRepository.existsByCodigo(actualizado.getCodigo())) {
             throw new IllegalArgumentException("Ya existe un pensum con ese código.");
         }
 
         if (actualizado.isActivo()) {
-            Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(carrera);
+            Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(actualizado.getCarrera());
             if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
                 throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
             }
         }
 
+        // Validar materias
         for (String codigo : actualizado.getMaterias()) {
             if (!materiaRepository.existsByCodigo(codigo)) {
                 throw new IllegalArgumentException("Materia no encontrada: " + codigo);
@@ -132,6 +95,7 @@ public List<PensumDTO> obtenerPensumsConNombreCarrera() {
         Pensum existente = pensumRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
 
+        // Si se quiere activar y ya hay otro activo para la misma carrera, error
         if (nuevoEstado) {
             Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(existente.getCarrera());
             if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
@@ -147,4 +111,3 @@ public List<PensumDTO> obtenerPensumsConNombreCarrera() {
         pensumRepository.deleteById(id);
     }
 }
-

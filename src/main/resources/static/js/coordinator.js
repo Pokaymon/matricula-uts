@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderPensum = (pensum) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${pensum.nombreCarrera || "Sin carrera"}</td>
+      <td>${carrerasMap[pensum.carrera] || pensum.carrera}</td>
       <td>${pensum.codigo}</td>
       <td>${pensum.fechaInicio}</td>
       <td>${pensum.activo ? 'Sí' : 'No'}</td>
@@ -96,28 +96,33 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Error al cargar materias:", err));
   };
 
-  const cargarCarreras = (carreraSeleccionadaId = "") => {
-    fetch("/api/carreras", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token")
-      }
+let carrerasMap = {};
+
+const cargarCarreras = (carreraSeleccionadaId = "") => {
+  return fetch("/api/carreras", {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      carrerasMap = {};
+      carreraSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
+      data.forEach(carrera => {
+        carrerasMap[carrera.id] = carrera.nombre;
+
+        const option = document.createElement("option");
+        option.value = carrera.id;
+        option.textContent = carrera.nombre;
+        if (carrera.id === carreraSeleccionadaId) {
+          option.selected = true;
+        }
+        carreraSelect.appendChild(option);
+      });
     })
-      .then(res => res.json())
-      .then(data => {
-        carreraSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
-        data.forEach(carrera => {
-          const option = document.createElement("option");
-          option.value = carrera.id;
-          option.textContent = carrera.nombre;
-          if (carrera.id === carreraSeleccionadaId) {
-            option.selected = true;
-          }
-          carreraSelect.appendChild(option);
-        });
-      })
-      .catch(err => console.error("Error al cargar carreras:", err));
-  };
+    .catch(err => console.error("Error al cargar carreras:", err));
+};
 
   const eliminarPensum = (id) => {
     if (confirm("¿Estás seguro de que deseas eliminar este pensum?")) {
@@ -147,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
 
-    cargarCarreras(pensum.idCarrera); // Usamos el ID de carrera para seleccionarla
+    cargarCarreras(pensum.carrera); // Usamos el ID de carrera para seleccionarla
     cargarMaterias(pensum.materias || []);
   };
 
@@ -213,8 +218,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => alert(err.message));
   });
 
-  cargarPensums();
+  cargarCarreras().then(() => {
+    cargarPensums();
+  });
   cargarMaterias();
-  cargarCarreras();
 });
 

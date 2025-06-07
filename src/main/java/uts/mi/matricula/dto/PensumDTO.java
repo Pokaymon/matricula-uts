@@ -39,7 +39,7 @@ public class PensumDTO {
         return codigo;
     }
 
-    public String getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
@@ -67,7 +67,7 @@ public class PensumDTO {
         this.codigo = codigo;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 

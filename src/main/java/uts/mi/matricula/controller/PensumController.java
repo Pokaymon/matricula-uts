@@ -34,11 +34,6 @@ public class PensumController {
                 .orElseThrow(() -> new RuntimeException("Pensum no encontrado"));
     }
 
-    @GetMapping("/nombre-carrera")
-    public List<PensumDTO> listarConNombreCarrera() {
-       return pensumService.obtenerPensumsConNombreCarrera();
-    }
-
     @GetMapping("/{codigo}/materias")
     public List<Materia> materiasDePensum(@PathVariable String codigo) {
         return pensumService.obtenerMateriasDePensum(codigo);
@@ -72,4 +67,3 @@ public class PensumController {
         pensumService.eliminarPensum(id);
     }
 }
-
