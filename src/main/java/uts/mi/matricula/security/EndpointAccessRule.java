@@ -20,7 +20,11 @@ public enum EndpointAccessRule {
 
     // GRUPOS
     GRUPOS_GET("/api/grupos", "GET", List.of("ESTUDIANTE", "PROFESOR")),
-    GRUPOS_MODIFY("/api/grupos", "*", List.of("PROFESOR"));
+    GRUPOS_MODIFY("/api/grupos", "*", List.of("PROFESOR")),
+
+    // PENSUMS ESTUDIANTES
+    USERS_PENSUM_UPDATE("/api/users/", "PATCH", List.of("ADMIN")),
+    USERS_PENSUM_GET("/api/users/", "GET", List.of("ESTUDIANTE", "ADMIN"));
 
     private final String pathPrefix;
     private final String method; // Puede ser GET, POST, *, etc.

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uts.mi.matricula.model.User;
+import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.service.UserService;
 import uts.mi.matricula.repository.UserRepository;
 import uts.mi.matricula.util.JwtUtil;
@@ -93,6 +94,37 @@ public class UserController {
             return ResponseEntity.ok(userOpt.get());
         } else {
             return ResponseEntity.status(404).body("Usuario no encontrado");
+        }
+    }
+
+    // PATCH para asignar o cambiar pensum solo a estudiantes
+    @PatchMapping("/{userId}/pensum/{pensumId}")
+    public ResponseEntity<?> actualizarPensum(
+            @PathVariable String userId,
+            @PathVariable String pensumId) {
+        try {
+            User updatedUser = userService.actualizarPensumDeEstudiante(userId, pensumId);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // GET para obtener el pensum completo al que pertenece un usuario
+    @GetMapping("/{userId}/pensum")
+    public ResponseEntity<?> obtenerPensumUsuario(@PathVariable String userId) {
+        Optional<User> userOpt = userService.getUserById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOpt.get();
+        Pensum pensum = user.getPensum();
+
+        if (pensum == null) {
+            return ResponseEntity.ok("No tiene un pensum asignado");
+        } else {
+            return ResponseEntity.ok(pensum);
         }
     }
 }

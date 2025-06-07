@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Carrera | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar_user :: navbar"></div>
+
+<main class="container">
+  <h2 class="welcome-title">Editar Carrera</h2>
+
+  <form th:action="@{/carreras/actualizar}" th:object="${carrera}" method="post" class="form-container">
+    <!-- Campo oculto para el ID -->
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Código: <input type="text" th:field="*{cod}" required /></label>
+    <label>Nombre: <input type="text" th:field="*{nombre}" required /></label>
+
+    <button type="submit" class="btn">Actualizar Carrera</button>
+  </form>
+
+  <a href="/carreras" class="btn">Volver al Listado</a>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/useLogout.js}"></script>
+
+</body>
+</html>
+

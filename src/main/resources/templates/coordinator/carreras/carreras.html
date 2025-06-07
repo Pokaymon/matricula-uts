@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Carreras | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/tablas.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar_user :: navbar"></div>
+
+<main class="container">
+  <h2 class="welcome-title">Carreras Registradas</h2>
+
+  <div class="button-group">
+    <a href="/carreras/nueva" class="btn">Registrar Nueva Carrera</a>
+    <a href="/info/coordinator" class="btn">Volver</a>
+  </div>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="carrera : ${carreras}">
+        <td th:text="${carrera.cod}">Código</td>
+        <td th:text="${carrera.nombre}">Nombre</td>
+        <td>
+          <a th:href="@{'/carreras/editar/' + ${carrera.id}}" class="btn small">Editar</a>
+          <a th:href="@{'/carreras/eliminar/' + ${carrera.id}}" class="btn small danger" onclick="return confirm('¿Eliminar esta carrera?')">Eliminar</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/useLogout.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+
+</body>
+</html>
+
