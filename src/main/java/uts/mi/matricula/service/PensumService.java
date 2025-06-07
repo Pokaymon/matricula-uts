@@ -6,6 +6,7 @@ import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.repository.MateriaRepository;
 import uts.mi.matricula.repository.PensumRepository;
+import uts.mi.matricula.repository.CarreraRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,27 +20,49 @@ public class PensumService {
     @Autowired
     private MateriaRepository materiaRepository;
 
+    @Autowired
+    private CarreraRepository carreraRepository;
+
     public Pensum crearPensum(Pensum pensum) {
         if (pensumRepository.existsByCodigo(pensum.getCodigo())) {
             throw new IllegalArgumentException("Ya existe un pensum con ese código.");
         }
 
-        // Validar que las materias existan
+        // Validar carrera no nula y existente
+        if (pensum.getCarrera() == null || pensum.getCarrera().getId() == null) {
+            throw new IllegalArgumentException("Carrera requerida.");
+        }
+
+        Carrera carrera = carreraRepository.findById(pensum.getCarrera().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada."));
+
+        // Validar que la carrera no tenga ya un pensum
+        if (carrera.getPensum() != null) {
+            throw new IllegalStateException("Esta carrera ya tiene un pensum asignado.");
+        }
+
+        // Validar pensum activo único
+        if (pensum.isActivo()) {
+            Optional<Pensum> activoExistente = pensumRepository.findByCarrera_IdAndActivoTrue(carrera.getId());
+            if (activoExistente.isPresent()) {
+                throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
+            }
+        }
+
+        // Validar materias
         for (String codigo : pensum.getMaterias()) {
             if (!materiaRepository.existsByCodigo(codigo)) {
                 throw new IllegalArgumentException("Materia no encontrada: " + codigo);
             }
         }
 
-        // Validar que solo haya un pensum activo por carrera
-        if (pensum.isActivo()) {
-            Optional<Pensum> activoExistente = pensumRepository.findByCarreraAndActivoTrue(pensum.getCarrera());
-            if (activoExistente.isPresent()) {
-                throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
-            }
-        }
+        Pensum guardado = pensumRepository.save(pensum);
 
-        return pensumRepository.save(pensum);
+        // Relacionar la carrera con el pensum
+        carrera.setPensum(guardado);
+        carreraRepository.save(carrera);
+
+        return guardado;
     }
 
     public List<Pensum> obtenerTodos() {
@@ -60,50 +83,86 @@ public class PensumService {
                 .collect(Collectors.toList());
     }
 
-    public Pensum actualizarPensum(String id, Pensum actualizado) {
-        Pensum existente = pensumRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
-
-        if (!existente.getCodigo().equals(actualizado.getCodigo()) &&
-                pensumRepository.existsByCodigo(actualizado.getCodigo())) {
-            throw new IllegalArgumentException("Ya existe un pensum con ese código.");
-        }
-
-        if (actualizado.isActivo()) {
-            Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(actualizado.getCarrera());
-            if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
-                throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
-            }
-        }
-
-        // Validar materias
-        for (String codigo : actualizado.getMaterias()) {
-            if (!materiaRepository.existsByCodigo(codigo)) {
-                throw new IllegalArgumentException("Materia no encontrada: " + codigo);
-            }
-        }
-
-        actualizado.setId(id);
-        return pensumRepository.save(actualizado);
-    }
-
-    public Pensum actualizarEstado(String id, boolean nuevoEstado) {
-        Pensum existente = pensumRepository.findById(id)
+public Pensum actualizarPensum(String id, Pensum actualizado) {
+    Pensum existente = pensumRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
 
-        // Si se quiere activar y ya hay otro activo para la misma carrera, error
-        if (nuevoEstado) {
-            Optional<Pensum> otroActivo = pensumRepository.findByCarreraAndActivoTrue(existente.getCarrera());
-            if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
-                throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
-            }
-        }
-
-        existente.setActivo(nuevoEstado);
-        return pensumRepository.save(existente);
+    // Validar código
+    if (!existente.getCodigo().equals(actualizado.getCodigo()) &&
+            pensumRepository.existsByCodigo(actualizado.getCodigo())) {
+        throw new IllegalArgumentException("Ya existe un pensum con ese código.");
     }
 
+    // Validar carrera
+    Carrera nuevaCarrera = carreraRepository.findById(actualizado.getCarrera().getId())
+            .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada."));
+
+    Optional<Pensum> pensumExistenteEnCarrera = pensumRepository.findByCarrera_Id(nuevaCarrera.getId());
+    if (pensumExistenteEnCarrera.isPresent() && !pensumExistenteEnCarrera.get().getId().equals(id)) {
+        throw new IllegalStateException("Esta carrera ya tiene un pensum asignado.");
+    }
+
+    // Validar activo
+    if (actualizado.isActivo()) {
+        Optional<Pensum> otroActivo = pensumRepository.findByCarrera_IdAndActivoTrue(nuevaCarrera.getId());
+        if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
+            throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
+        }
+    }
+
+    // Validar materias
+    for (String codigo : actualizado.getMaterias()) {
+        if (!materiaRepository.existsByCodigo(codigo)) {
+            throw new IllegalArgumentException("Materia no encontrada: " + codigo);
+        }
+    }
+
+    // Actualizar carrera referenciada
+    nuevoVinculoCarrera(nuevaCarrera, actualizado);
+
+    // Actualizar datos del pensum existente
+    existente.setCarrera(nuevaCarrera);
+    existente.setCodigo(actualizado.getCodigo());
+    existente.setFechaInicio(actualizado.getFechaInicio());
+    existente.setActivo(actualizado.isActivo());
+    existente.setMaterias(actualizado.getMaterias());
+
+    return pensumRepository.save(existente);
+}
+
+// Método auxiliar para mantener consistencia en el vínculo carrera <-> pensum
+private void nuevoVinculoCarrera(Carrera carrera, Pensum pensum) {
+    carrera.setPensum(pensum);
+    carreraRepository.save(carrera);
+}
+
+public Pensum actualizarEstado(String id, boolean nuevoEstado) {
+    Pensum existente = pensumRepository.findById(id)
+        .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
+
+    if (nuevoEstado) {
+        String carreraId = existente.getCarrera().getId();
+        Optional<Pensum> otroActivo = pensumRepository.findByCarrera_IdAndActivoTrue(carreraId);
+        if (otroActivo.isPresent() && !otroActivo.get().getId().equals(id)) {
+            throw new IllegalStateException("Ya existe un pensum activo para esta carrera.");
+        }
+    }
+
+    existente.setActivo(nuevoEstado);
+    return pensumRepository.save(existente);
+}
+
     public void eliminarPensum(String id) {
+        Pensum pensum = pensumRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
+
+        // Limpiar relación en carrera
+        Carrera carrera = pensum.getCarrera();
+        if (carrera != null) {
+            carrera.setPensum(null);
+            carreraRepository.save(carrera);
+        }
+
         pensumRepository.deleteById(id);
     }
 }
