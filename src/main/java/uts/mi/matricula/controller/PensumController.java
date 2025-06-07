@@ -65,4 +65,3 @@ public class PensumController {
         pensumService.eliminarPensum(id);
     }
 }
-

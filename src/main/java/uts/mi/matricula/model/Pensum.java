@@ -1,7 +1,6 @@
 package uts.mi.matricula.model;
 
 import org.springframework.data.annotation.*;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,8 +11,7 @@ public class Pensum {
     @Id
     private String id;
 
-    @DBRef
-    private Carrera carrera;
+    private String carrera;
 
     private String codigo;
 
@@ -27,7 +25,7 @@ public class Pensum {
     public Pensum() {}
 
     // Constructor con parámetros
-    public Pensum(String id, Carrera carrera, String codigo, LocalDate fechaInicio, boolean activo, List<String> materias) {
+    public Pensum(String id, String carrera, String codigo, LocalDate fechaInicio, boolean activo, List<String> materias) {
         this.id = id;
         this.carrera = carrera;
         this.codigo = codigo;
@@ -45,11 +43,11 @@ public class Pensum {
         this.id = id;
     }
 
-    public Carrera getCarrera() {
+    public String getCarrera() {
         return carrera;
     }
 
-    public void setCarrera(Carrera carrera) {
+    public void setCarrera(String carrera) {
         this.carrera = carrera;
     }
 
