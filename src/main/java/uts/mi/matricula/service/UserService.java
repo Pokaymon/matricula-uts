@@ -27,6 +27,10 @@ public class UserService {
         return userRepository.findByRolIgnoreCase("PROFESOR");
     }
 
+    public List<User> getEstudiantes() {
+	return userRepository.findByRolIgnoreCase("ESTUDIANTE");
+    }
+
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }

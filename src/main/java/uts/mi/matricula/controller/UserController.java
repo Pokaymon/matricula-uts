@@ -31,6 +31,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getProfesores());
     }
 
+    @GetMapping("/estudiantes")
+    public ResponseEntity<List<User>> getEstudiantes() {
+        return ResponseEntity.ok(userService.getEstudiantes());
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());

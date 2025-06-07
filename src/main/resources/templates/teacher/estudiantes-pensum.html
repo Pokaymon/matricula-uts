@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Grupos | UTS</title>
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/grupos.css}">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar_user :: navbar"></div>
+
+  <section>
+    <main class="groups_container">
+
+      <h1 class="welcome_title">Gestionar Pensums por Estudiante</h1>
+
+      <div class="buttons_container">
+	<a href="/info/teacher" class="create_group">Volver</a>
+      </div>
+
+      <div class="groups">
+      </div>
+
+    </main>
+  </section>
+
+  <!-- SweetAler -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Script Para hacer Fetchs -->
+  <script th:src="@{/js/estudiantes-pensum.js}"></script>
+
+  <!-- Logout -->
+  <script th:src="@{/js/useLogout.js}"></script>
+
+</body>
+</html>
