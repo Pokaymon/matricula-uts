@@ -54,7 +54,12 @@
     <br>
     <form id="createPensumForm">
       <input type="hidden" id="pensumId" />
-      <input type="text" id="carrera" placeholder="Carrera" required />
+      
+      <select id="carrera" required>
+        <option value="">Seleccione una carrera</option>
+        <!-- Se llena dinámicamente con JS -->
+      </select>
+
       <input type="text" id="codigo" placeholder="Codigo del Pensum" required />
       <input type="date" id="fechaInicio" placeholder="Fecha de Inicio" required />
       <label>

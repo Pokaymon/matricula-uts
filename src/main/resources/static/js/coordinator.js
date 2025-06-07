@@ -60,6 +60,31 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Error al cargar pensums:", err));
   };
 
+  const cargarCarreras = (carreraSeleccionadaId = "") => {
+    const select = document.getElementById("carrera");
+
+    fetch("/api/carreras", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        select.innerHTML = `<option value="">Seleccione una carrera</option>`;
+        data.forEach(carrera => {
+          const option = document.createElement("option");
+          option.value = carrera.id;
+          option.textContent = carrera.nombre;
+          if (carrera.id === carreraSeleccionadaId) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+      })
+      .catch(err => console.error("Error al cargar carreras:", err));
+  };
+
   const cargarMaterias = (materiasSeleccionadas = []) => {
     fetch("/api/materias", {
       headers: {
@@ -113,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = "Actualizar Pensum";
 
     document.getElementById("pensumId").value = pensum.id;
-    document.getElementById("carrera").value = pensum.carrera;
+    cargarCarreras(pensum.carrera.id);
     document.getElementById("codigo").value = pensum.codigo;
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
@@ -123,8 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   openBtn.addEventListener("click", () => {
-    cargarMaterias();
-    abrirModal();
+    Promise.all([
+      cargarMaterias(),
+      cargarCarreras()
+    ]).then(abrirModal);
   });
 
   closeBtn.addEventListener("click", cerrarModal);
@@ -156,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pensumId = document.getElementById("pensumId").value;
     const pensumData = {
-      carrera: document.getElementById("carrera").value,
+      carrera: { id: document.getElementById("carrera").value },
       codigo: document.getElementById("codigo").value,
       fechaInicio: document.getElementById("fechaInicio").value,
       activo: document.getElementById("activo").checked,
@@ -189,5 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Carga inicial
   cargarPensums();
   cargarMaterias();
+  cargarCarreras();
 });
 
