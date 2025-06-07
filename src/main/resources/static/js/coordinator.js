@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const openBtn = document.querySelector(".create_users_button");
   const closeBtn = document.querySelector(".close-button");
   const materiasContainer = document.getElementById("materias-checkboxes");
+  const carreraSelect = document.getElementById("carrera");
 
   let isEditing = false;
 
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderPensum = (pensum) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${pensum.carrera}</td>
+      <td>${pensum.nombreCarrera || "Sin carrera"}</td>
       <td>${pensum.codigo}</td>
       <td>${pensum.fechaInicio}</td>
       <td>${pensum.activo ? 'Sí' : 'No'}</td>
@@ -95,6 +96,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Error al cargar materias:", err));
   };
 
+  const cargarCarreras = (carreraSeleccionadaId = "") => {
+    fetch("/api/carreras", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        carreraSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
+        data.forEach(carrera => {
+          const option = document.createElement("option");
+          option.value = carrera.id;
+          option.textContent = carrera.nombre;
+          if (carrera.id === carreraSeleccionadaId) {
+            option.selected = true;
+          }
+          carreraSelect.appendChild(option);
+        });
+      })
+      .catch(err => console.error("Error al cargar carreras:", err));
+  };
+
   const eliminarPensum = (id) => {
     if (confirm("¿Estás seguro de que deseas eliminar este pensum?")) {
       fetch(`/api/pensums/${id}`, {
@@ -119,15 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = "Actualizar Pensum";
 
     document.getElementById("pensumId").value = pensum.id;
-    document.getElementById("carrera").value = pensum.carrera;
     document.getElementById("codigo").value = pensum.codigo;
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
 
+    cargarCarreras(pensum.idCarrera); // Usamos el ID de carrera para seleccionarla
     cargarMaterias(pensum.materias || []);
   };
 
   openBtn.addEventListener("click", () => {
+    cargarCarreras();
     cargarMaterias();
     abrirModal();
   });
@@ -158,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pensumId = document.getElementById("pensumId").value;
     const pensumData = {
-      carrera: document.getElementById("carrera").value,
+      carrera: carreraSelect.value, // ID seleccionado
       codigo: document.getElementById("codigo").value,
       fechaInicio: document.getElementById("fechaInicio").value,
       activo: document.getElementById("activo").checked,
@@ -190,5 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cargarPensums();
   cargarMaterias();
+  cargarCarreras();
 });
 

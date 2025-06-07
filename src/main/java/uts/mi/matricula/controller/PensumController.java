@@ -1,12 +1,14 @@
 package uts.mi.matricula.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import uts.mi.matricula.model.Materia;
 import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.service.PensumService;
 
-import org.springframework.http.*;
+import uts.mi.matricula.dto.PensumDTO;
+
 import java.util.*;
 
 @RestController
@@ -30,6 +32,11 @@ public class PensumController {
     public Pensum obtenerPorCodigo(@PathVariable String codigo) {
         return pensumService.obtenerPorCodigo(codigo)
                 .orElseThrow(() -> new RuntimeException("Pensum no encontrado"));
+    }
+
+    @GetMapping("/nombre-carrera")
+    public List<PensumDTO> listarConNombreCarrera() {
+       return pensumService.obtenerPensumsConNombreCarrera();
     }
 
     @GetMapping("/{codigo}/materias")
@@ -65,3 +72,4 @@ public class PensumController {
         pensumService.eliminarPensum(id);
     }
 }
+
