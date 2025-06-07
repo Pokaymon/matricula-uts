@@ -2,8 +2,11 @@ package uts.mi.matricula.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import uts.mi.matricula.model.Carrera;
+import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.repository.CarreraRepository;
+import uts.mi.matricula.repository.PensumRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,13 +17,26 @@ public class CarreraService {
     @Autowired
     private CarreraRepository carreraRepository;
 
+    @Autowired
+    private PensumRepository pensumRepository;
+
     public Carrera crearCarrera(Carrera carrera) throws Exception {
         if (carreraRepository.existsByCod(carrera.getCod())) {
             throw new Exception("Ya existe una carrera con ese código");
         }
+
         if (carreraRepository.existsByNombre(carrera.getNombre())) {
             throw new Exception("Ya existe una carrera con ese nombre");
         }
+
+        // Validar que el pensum existe
+        if (carrera.getPensum() != null) {
+            String pensumId = carrera.getPensum().getId();
+            Pensum pensum = pensumRepository.findById(pensumId)
+                .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
+            carrera.setPensum(pensum);
+        }
+
         return carreraRepository.save(carrera);
     }
 
@@ -46,7 +62,16 @@ public class CarreraService {
 
         existente.setCod(carrera.getCod());
         existente.setNombre(carrera.getNombre());
-        existente.setPensum(carrera.getPensum());
+
+        // Validar el pensum
+        if (carrera.getPensum() != null) {
+            String pensumId = carrera.getPensum().getId();
+            Pensum pensum = pensumRepository.findById(pensumId)
+                .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
+            existente.setPensum(pensum);
+        } else {
+            existente.setPensum(null);
+        }
 
         return carreraRepository.save(existente);
     }
@@ -55,4 +80,3 @@ public class CarreraService {
         carreraRepository.deleteById(id);
     }
 }
-
