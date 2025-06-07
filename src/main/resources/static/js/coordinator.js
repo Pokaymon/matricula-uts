@@ -48,41 +48,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const cargarPensums = () => {
     fetch("/api/pensums", {
       headers: {
-	"Content-Type": "application/json",
-	"Authorization": "Bearer " + localStorage.getItem("token")
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        tbody.innerHTML = "";
-        data.forEach(renderPensum);
-      })
-      .catch(err => console.error("Error al cargar pensums:", err));
-  };
-
-  const cargarCarreras = (carreraSeleccionadaId = "") => {
-    const select = document.getElementById("carrera");
-
-    fetch("/api/carreras", {
-      headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + localStorage.getItem("token")
       }
     })
       .then(res => res.json())
       .then(data => {
-        select.innerHTML = `<option value="">Seleccione una carrera</option>`;
-        data.forEach(carrera => {
-          const option = document.createElement("option");
-          option.value = carrera.id;
-          option.textContent = carrera.nombre;
-          if (carrera.id === carreraSeleccionadaId) {
-            option.selected = true;
-          }
-          select.appendChild(option);
-        });
+        if (!Array.isArray(data)) {
+          console.error("Respuesta inesperada:", data);
+          throw new Error("La respuesta del servidor no es una lista");
+        }
+        tbody.innerHTML = "";
+        data.forEach(renderPensum);
       })
-      .catch(err => console.error("Error al cargar carreras:", err));
+      .catch(err => console.error("Error al cargar pensums:", err));
   };
 
   const cargarMaterias = (materiasSeleccionadas = []) => {
@@ -100,17 +79,16 @@ document.addEventListener("DOMContentLoaded", () => {
           label.style.display = "block";
 
           const checkbox = document.createElement("input");
-	  checkbox.type = "checkbox";
-	  checkbox.value = m.codigo;
-	  checkbox.classList.add("materia-checkbox");
+          checkbox.type = "checkbox";
+          checkbox.value = m.codigo;
+          checkbox.classList.add("materia-checkbox");
 
-	  // Marcar selecciones de la lista de materias
-	  if (materiasSeleccionadas.includes(m.codigo)) {
-	    checkbox.checked = true;
-	  }
+          if (materiasSeleccionadas.includes(m.codigo)) {
+            checkbox.checked = true;
+          }
 
-	  label.appendChild(checkbox);
-	  label.appendChild(document.createTextNode(` ${m.codigo} - ${m.nombre}`));
+          label.appendChild(checkbox);
+          label.appendChild(document.createTextNode(`${m.codigo} - ${m.nombre}`));
           materiasContainer.appendChild(label);
         });
       })
@@ -119,9 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const eliminarPensum = (id) => {
     if (confirm("¿Estás seguro de que deseas eliminar este pensum?")) {
-      fetch(`/api/pensums/${id}`, { method: "DELETE",
-	headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
-       })
+      fetch(`/api/pensums/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+      })
         .then(res => {
           if (!res.ok) throw new Error("Error al eliminar pensum");
           alert("Pensum eliminado con éxito");
@@ -138,20 +119,17 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = "Actualizar Pensum";
 
     document.getElementById("pensumId").value = pensum.id;
-    cargarCarreras(pensum.carrera.id);
+    document.getElementById("carrera").value = pensum.carrera;
     document.getElementById("codigo").value = pensum.codigo;
     document.getElementById("fechaInicio").value = pensum.fechaInicio;
     document.getElementById("activo").checked = pensum.activo;
 
-    // Cargar Materias
     cargarMaterias(pensum.materias || []);
   };
 
   openBtn.addEventListener("click", () => {
-    Promise.all([
-      cargarMaterias(),
-      cargarCarreras()
-    ]).then(abrirModal);
+    cargarMaterias();
+    abrirModal();
   });
 
   closeBtn.addEventListener("click", cerrarModal);
@@ -163,7 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (e.target.classList.contains("edit-btn")) {
-      cargarMaterias();
       const pensum = JSON.parse(e.target.dataset.pensum);
       editarPensum(pensum);
     }
@@ -172,10 +149,8 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", e => {
     e.preventDefault();
 
-    // Mapear
     const materiasSeleccionadas = Array.from(document.querySelectorAll(".materia-checkbox:checked")).map(cb => cb.value);
 
-    // Validacion
     if (materiasSeleccionadas.length === 0) {
       alert("Debes seleccionar al menos una materia para continuar.");
       return;
@@ -183,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pensumId = document.getElementById("pensumId").value;
     const pensumData = {
-      carrera: { id: document.getElementById("carrera").value },
+      carrera: document.getElementById("carrera").value,
       codigo: document.getElementById("codigo").value,
       fechaInicio: document.getElementById("fechaInicio").value,
       activo: document.getElementById("activo").checked,
@@ -197,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method,
       headers: {
         "Content-Type": "application/json",
-	"Authorization": "Bearer " + localStorage.getItem("token")
+        "Authorization": "Bearer " + localStorage.getItem("token")
       },
       body: JSON.stringify(pensumData)
     })
@@ -213,9 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => alert(err.message));
   });
 
-  // Carga inicial
   cargarPensums();
   cargarMaterias();
-  cargarCarreras();
 });
 
