@@ -77,8 +77,20 @@
 
     <form id="form-crear-grupo">
       <label>Código del grupo: <input type="text" name="codigo" required></label><br>
-      <label>Código de materia: <input type="text" name="codMateria" required></label><br>
-      <label>ID del profesor: <input type="text" name="profesorId" required></label><br><br>
+
+      <!-- Select Materia -->
+      <label> Materia
+        <select name="codMateria" id="select-materia" required>
+          <option value="">Seleccione una materia</option>
+        </select>
+      </label><br>
+
+      <!-- Select Profesor -->
+      <label> Profesor
+        <select name="profesorId" id="select-profesor" required>
+          <option value="">Seleccione un profesor</option>
+        </select>
+      </label><br>
 
       <h3>Horarios</h3>
       <div id="horarios-container"></div>

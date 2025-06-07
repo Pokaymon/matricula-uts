@@ -22,6 +22,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> getProfesores() {
+        return userRepository.findByRolIgnoreCase("PROFESOR");
+    }
+
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }

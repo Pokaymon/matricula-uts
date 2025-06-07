@@ -25,6 +25,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/profesores")
+    public ResponseEntity<List<User>> getProfesores() {
+        return ResponseEntity.ok(userService.getProfesores());
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());

@@ -40,7 +40,7 @@
              th:id="${'materia_' + m.codigo}"
              th:value="${m.codigo}"
              th:field="*{prerequisitos}"
-             th:checked="${#lists.contains(materia.prerequisitos, m.codigo)}" />
+             th:checked="${#lists.contains(materia.prerequisitos ?: {}, m.codigo)}" />
         <label th:for="${'materia_' + m.codigo}" th:text="${m.nombre + ' (' + m.codigo + ')'}"></label>
       </div>
     </div>

@@ -4,13 +4,20 @@ import java.util.List;
 
 public enum EndpointAccessRule {
 
+    // USERS
     USERS_GET("/api/users", "GET", List.of("ADMIN", "COORDINADOR")),
     USERS_MODIFY("/api/users", "*", List.of("ADMIN")),
-    MATERIAS_GET("/api/materias", "GET", List.of("ADMIN", "COORDINADOR")),
+    USERS_PROFESORES("/api/users/profesores", "GET", List.of("PROFESOR")),
+
+    MATERIAS_GET("/api/materias", "GET", List.of("ADMIN", "COORDINADOR", "PROFESOR")),
     MATERIAS_MODIFY("/api/materias", "*", List.of("COORDINADOR")),
     PENSUMS_GET("/api/pensums", "GET", List.of("ADMIN", "COORDINADOR", "AUDITOR")),
     PENSUMS_MODIFY("/api/pensums", "*", List.of("COORDINADOR", "AUDITOR")),
-    PERMISOS_ALL("/api/permisos", "*", List.of("ADMIN"));
+    PERMISOS_ALL("/api/permisos", "*", List.of("ADMIN")),
+
+    // GRUPOS
+    GRUPOS_GET("/api/grupos", "GET", List.of("ESTUDIANTE", "PROFESOR")),
+    GRUPOS_MODIFY("/api/grupos", "*", List.of("PROFESOR"));
 
     private final String pathPrefix;
     private final String method; // Puede ser GET, POST, *, etc.

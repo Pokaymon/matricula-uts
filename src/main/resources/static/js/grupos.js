@@ -12,6 +12,8 @@ function inicializarEventos() {
   document.querySelector(".create_group").addEventListener("click", () => {
     grupoEnEdicion = null;
     limpiarModal();
+    cargarMateriasEnSelect();
+    cargarProfesoresEnSelect();
     mostrarModal(modalCrearGrupo);
   });
 
@@ -34,14 +36,71 @@ function inicializarEventos() {
   document.getElementById("form-crear-grupo").addEventListener("submit", crearOActualizarGrupo);
 }
 
-function cargarGrupos() {
-  fetch("/api/grupos/vista")
+function cargarMateriasEnSelect() {
+  fetch("/api/materias", {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
     .then(res => res.json())
+    .then(materias => {
+      const select = document.getElementById("select-materia");
+      select.innerHTML = '<option value="">Seleccione una materia</option>';
+      materias.forEach(m => {
+        const option = document.createElement("option");
+        option.value = m.codigo;             // Lo que se envía
+        option.textContent = `${m.nombre} (${m.codigo})`; // Lo que se muestra
+        select.appendChild(option);
+      });
+    })
+    .catch(err => {
+      console.error("Error cargando materias:", err);
+      alert("No se pudieron cargar las materias.");
+    });
+}
+
+function cargarProfesoresEnSelect() {
+  fetch("/api/users/profesores", {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(res => res.json())
+    .then(profesores => {
+      const select = document.getElementById("select-profesor");
+      select.innerHTML = '<option value="">Seleccione un profesor</option>';
+      materias.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.cedula;
+        option.textContent = `${p.nombre} (${p.apellido})`;
+        select.appendChild(option);
+      });
+    })
+    .catch(err => {
+      console.error("Error cargando profesores:", err);
+      alert("No se pudieron cargar los profesores.");
+    });
+}
+
+function cargarGrupos() {
+  fetch("/api/grupos/vista", {
+    headers: {
+      "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      return res.json();
+    })
     .then(data => {
+      if (!Array.isArray(data)) throw new Error("Respuesta no válida del servidor");
       const container = document.querySelector(".groups");
       data.forEach(grupo => container.appendChild(crearElementoGrupo(grupo)));
     })
-    .catch(err => console.error("Error cargando grupos:", err));
+    .catch(err => {
+      console.error("Error cargando grupos:", err);
+      alert("No se pudieron cargar los grupos. ¿Estás autenticado?");
+    });
 }
 
 function crearElementoGrupo(grupo) {
@@ -83,17 +142,23 @@ function crearElementoGrupo(grupo) {
 
   const editIcon = div.querySelector(".edit-icon");
   editIcon.addEventListener("click", e => {
+    cargarMateriasEnSelect();
+    cargarProfesoresEnSelect();
     e.stopPropagation();
 
-  fetch(`/api/grupos/${grupo.id}`)
+  fetch(`/api/grupos/${grupo.id}`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
     .then(res => res.json())
     .then(data => {
       grupoEnEdicion = data;
       limpiarModal();
 
       document.querySelector("#form-crear-grupo [name='codigo']").value = data.codigo;
-      document.querySelector("#form-crear-grupo [name='codMateria']").value = data.codMateria;
-      document.querySelector("#form-crear-grupo [name='profesorId']").value = data.profesorId;
+      document.querySelector("#select-materia").value = data.codMateria;
+      document.querySelector("#select-profesor").value = data.profesorId;
 
       data.horarios.forEach((horario, idx) => {
         agregarHorario();
@@ -128,7 +193,10 @@ function confirmarYEliminarGrupo(idGrupo, elemento) {
   }).then((result) => {
     if (result.isConfirmed) {
       fetch(`/api/grupos/${idGrupo}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
       })
       .then(res => {
         if (!res.ok) throw new Error("Error al eliminar grupo");
@@ -144,7 +212,11 @@ function confirmarYEliminarGrupo(idGrupo, elemento) {
 }
 
 function abrirModalConDetalles(codigoGrupo) {
-  fetch("/api/grupos")
+  fetch("/api/grupos", {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
     .then(res => res.json())
     .then(grupos => {
       const grupo = grupos.find(g => g.codigo === codigoGrupo);
@@ -186,7 +258,7 @@ function crearOActualizarGrupo(e) {
 
   fetch(url, {
     method: metodo,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") },
     body: JSON.stringify(grupo)
   })
     .then(res => {

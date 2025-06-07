@@ -295,3 +295,29 @@ body {
   border-left: 4px solid #007a69;
   border-radius: 6px;
 }
+#form-crear-grupo select {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px;
+  border: 2px solid #007a69; /* Verde institucional */
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 5px;
+  color: #003c33;
+  background-color: #ffffff;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='%23007a69' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+#form-crear-grupo select:focus {
+  border-color: #00594d;
+  box-shadow: 0 0 4px rgba(0, 122, 105, 0.5);
+  outline: none;
+}
+#form-crear-grupo option {
+  color: #003c33;
+}
