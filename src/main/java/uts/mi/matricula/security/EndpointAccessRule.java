@@ -8,6 +8,7 @@ public enum EndpointAccessRule {
     USERS_GET("/api/users", "GET", List.of("ADMIN", "COORDINADOR")),
     USERS_MODIFY("/api/users", "*", List.of("ADMIN")),
     USERS_PROFESORES("/api/users/profesores", "GET", List.of("PROFESOR")),
+    USERS_ESTUDIANTES("/api/users/estudiantes", "*", List.of("PROFESOR")),
 
     // CARRERAS
     CARRERAS_GET("/api/carreras", "*", List.of("COORDINADOR")),
@@ -23,7 +24,7 @@ public enum EndpointAccessRule {
     GRUPOS_MODIFY("/api/grupos", "*", List.of("PROFESOR")),
 
     // PENSUMS ESTUDIANTES
-    USERS_PENSUM_UPDATE("/api/users/", "PATCH", List.of("ADMIN")),
+    USERS_PENSUM_UPDATE("/api/users/", "PATCH", List.of("ADMIN", "PROFESOR")),
     USERS_PENSUM_GET("/api/users/", "GET", List.of("ESTUDIANTE", "ADMIN"));
 
     private final String pathPrefix;

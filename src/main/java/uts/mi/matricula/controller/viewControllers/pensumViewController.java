@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class pensumViewController {
 
-    @RequestMapping("/users/pensum")
+    @RequestMapping("/users/pensums")
     public String favicon() {
         return "teacher/estudiantes-pensum";
     }
