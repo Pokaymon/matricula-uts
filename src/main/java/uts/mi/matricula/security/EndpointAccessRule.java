@@ -9,6 +9,9 @@ public enum EndpointAccessRule {
     USERS_MODIFY("/api/users", "*", List.of("ADMIN")),
     USERS_PROFESORES("/api/users/profesores", "GET", List.of("PROFESOR")),
 
+    // CARRERAS
+    CARRERAS_GET("/api/carreras", "*", List.of("COORDINADOR")),
+
     MATERIAS_GET("/api/materias", "GET", List.of("ADMIN", "COORDINADOR", "PROFESOR")),
     MATERIAS_MODIFY("/api/materias", "*", List.of("COORDINADOR")),
     PENSUMS_GET("/api/pensums", "GET", List.of("ADMIN", "COORDINADOR", "AUDITOR")),

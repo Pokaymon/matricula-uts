@@ -37,7 +37,7 @@ function inicializarEventos() {
 }
 
 function cargarMateriasEnSelect() {
-  fetch("/api/materias", {
+  return fetch("/api/materias", {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
       }
@@ -60,7 +60,7 @@ function cargarMateriasEnSelect() {
 }
 
 function cargarProfesoresEnSelect() {
-  fetch("/api/users/profesores", {
+  return fetch("/api/users/profesores", {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
       }
@@ -69,7 +69,7 @@ function cargarProfesoresEnSelect() {
     .then(profesores => {
       const select = document.getElementById("select-profesor");
       select.innerHTML = '<option value="">Seleccione un profesor</option>';
-      materias.forEach(p => {
+      profesores.forEach(p => {
         const option = document.createElement("option");
         option.value = p.cedula;
         option.textContent = `${p.nombre} (${p.apellido})`;
@@ -141,10 +141,13 @@ function crearElementoGrupo(grupo) {
   });
 
   const editIcon = div.querySelector(".edit-icon");
-  editIcon.addEventListener("click", e => {
-    cargarMateriasEnSelect();
-    cargarProfesoresEnSelect();
+  editIcon.addEventListener("click", async e => {
     e.stopPropagation();
+
+    const [materiasCargadas, ProfesoresCargados] = await Promise.all([
+      cargarMateriasEnSelect(),
+      cargarProfesoresEnSelect()
+    ]);
 
   fetch(`/api/grupos/${grupo.id}`, {
       headers: {
