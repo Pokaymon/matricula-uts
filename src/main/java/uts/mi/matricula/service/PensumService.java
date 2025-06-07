@@ -30,7 +30,10 @@ public class PensumService {
         }
 
         Carrera carrera = validarYObtenerCarrera(pensum.getCarrera());
-        if (carrera.getPensum() != null) {
+
+        // Validar que la carrera NO tenga pensum asignado usando el repositorio
+        List<Pensum> pensumsDeCarrera = pensumRepository.findByCarrera_Id(carrera.getId());
+        if (!pensumsDeCarrera.isEmpty()) {
             throw new IllegalStateException("Esta carrera ya tiene un pensum asignado.");
         }
 
@@ -41,7 +44,8 @@ public class PensumService {
         validarMaterias(pensum.getMaterias());
 
         Pensum guardado = pensumRepository.save(pensum);
-        vincularCarreraConPensum(carrera, guardado);
+
+        // Ya no vinculamos carrera.setPensum(pensum)
         return guardado;
     }
 
@@ -73,6 +77,7 @@ public class PensumService {
         }
 
         Carrera nuevaCarrera = validarYObtenerCarrera(actualizado.getCarrera());
+
         validarUnicoPensumPorCarrera(nuevaCarrera.getId(), id);
 
         if (actualizado.isActivo()) {
@@ -80,7 +85,8 @@ public class PensumService {
         }
 
         validarMaterias(actualizado.getMaterias());
-        vincularCarreraConPensum(nuevaCarrera, actualizado);
+
+        // No vinculamos carrera.setPensum(pensum)
 
         existente.setCarrera(nuevaCarrera);
         existente.setCodigo(actualizado.getCodigo());
@@ -107,12 +113,7 @@ public class PensumService {
         Pensum pensum = pensumRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Pensum no encontrado."));
 
-        Carrera carrera = pensum.getCarrera();
-        if (carrera != null) {
-            carrera.setPensum(null);
-            carreraRepository.save(carrera);
-        }
-
+        // Ya no debemos actualizar carrera.setPensum(null)
         pensumRepository.deleteById(id);
     }
 
@@ -141,15 +142,13 @@ public class PensumService {
     }
 
     private void validarUnicoPensumPorCarrera(String carreraId, String idActual) {
-        Optional<Pensum> otro = pensumRepository.findByCarrera_Id(carreraId);
-        if (otro.isPresent() && !otro.get().getId().equals(idActual)) {
+        List<Pensum> otros = pensumRepository.findByCarrera_Id(carreraId);
+        boolean otroPensum = otros.stream()
+                .anyMatch(p -> !p.getId().equals(idActual));
+        if (otroPensum) {
             throw new IllegalStateException("Esta carrera ya tiene un pensum asignado.");
         }
     }
 
-    private void vincularCarreraConPensum(Carrera carrera, Pensum pensum) {
-        carrera.setPensum(pensum);
-        carreraRepository.save(carrera);
-    }
 }
 

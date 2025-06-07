@@ -2,7 +2,6 @@ package uts.mi.matricula.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "carreras")
@@ -17,16 +16,12 @@ public class Carrera {
     @Indexed(unique = true)
     private String nombre;
 
-    @DBRef
-    private Pensum pensum;
-
     public Carrera() {
     }
 
-    public Carrera(String cod, String nombre, Pensum pensum) {
+    public Carrera(String cod, String nombre) {
         this.cod = cod;
         this.nombre = nombre;
-        this.pensum = pensum;
     }
 
     public String getId() {
@@ -47,14 +42,6 @@ public class Carrera {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Pensum getPensum() {
-        return pensum;
-    }
-
-    public void setPensum(Pensum pensum) {
-        this.pensum = pensum;
     }
 }
 

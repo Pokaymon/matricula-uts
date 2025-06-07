@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import uts.mi.matricula.model.Carrera;
-import uts.mi.matricula.model.Pensum;
 import uts.mi.matricula.repository.CarreraRepository;
-import uts.mi.matricula.repository.PensumRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +15,6 @@ public class CarreraService {
     @Autowired
     private CarreraRepository carreraRepository;
 
-    @Autowired
-    private PensumRepository pensumRepository;
-
     public Carrera crearCarrera(Carrera carrera) throws Exception {
         if (carreraRepository.existsByCod(carrera.getCod())) {
             throw new Exception("Ya existe una carrera con ese código");
@@ -27,21 +22,6 @@ public class CarreraService {
 
         if (carreraRepository.existsByNombre(carrera.getNombre())) {
             throw new Exception("Ya existe una carrera con ese nombre");
-        }
-
-        // Validar que el pensum existe
-        if (carrera.getPensum() != null) {
-            String pensumId = carrera.getPensum().getId();
-            Pensum pensum = pensumRepository.findById(pensumId)
-                .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
-
-        // Validar que el pensum no esté asignado a otra carrera
-        Optional<Carrera> existente = carreraRepository.findByPensum_Id(pensumId);
-        if (existente.isPresent()) {
-            throw new Exception("El pensum ya está asignado a otra carrera");
-        }
-
-            carrera.setPensum(pensum);
         }
 
         return carreraRepository.save(carrera);
@@ -69,22 +49,6 @@ public class CarreraService {
 
         existente.setCod(carrera.getCod());
         existente.setNombre(carrera.getNombre());
-
-        // Validar el pensum
-        if (carrera.getPensum() != null) {
-            String pensumId = carrera.getPensum().getId();
-            Pensum pensum = pensumRepository.findById(pensumId)
-                .orElseThrow(() -> new Exception("El pensum con ID " + pensumId + " no existe"));
-
-        Optional<Carrera> otraCarreraConPensum = carreraRepository.findByPensum_Id(pensumId);
-        if (otraCarreraConPensum.isPresent() && !otraCarreraConPensum.get().getId().equals(id)) {
-            throw new Exception("El pensum ya está asignado a otra carrera");
-        }
-
-            existente.setPensum(pensum);
-        } else {
-            existente.setPensum(null);
-        }
 
         return carreraRepository.save(existente);
     }
